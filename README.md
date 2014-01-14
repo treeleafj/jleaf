@@ -1,6 +1,6 @@
 jleaf
 ==================================
-#极速,简单,解耦的MVC框架
+# 极速,简单,解耦的MVC框架
 	
 	采用注解式@Controller方式标示Controller,然后可用ControllerManager.add(UserController.class)进行添加
 	
@@ -149,5 +149,3 @@ jleaf
 		
 		Result result = mvc.doAction(actionRequest);
 	}
-	
-	
