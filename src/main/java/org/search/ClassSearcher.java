@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
  * @author leaf
  * @date 2014-1-19 下午4:58:02
  */
-@SuppressWarnings({ "rawtypes" })
 public class ClassSearcher {
 
 	private static final Logger log = Logger.getLogger(ClassSearcher.class);
@@ -31,7 +30,13 @@ public class ClassSearcher {
 	}
 
 	public ClassSearcher(String basePath) {
-		this.basePath = basePath;
+		if(basePath != null){
+			this.basePath = basePath;
+		}else{
+			URL url = Thread.currentThread().getContextClassLoader()
+					.getResource("");
+			this.basePath = url.getPath();
+		}
 	}
 
 	/**
@@ -235,26 +240,4 @@ public class ClassSearcher {
 		this.basePath = basePath;
 	}
 
-	public static void main(String[] args) throws Exception {
-
-		ClassSearcher classSearcher = new ClassSearcher(
-				"D:/Java/workspace/jleaf/WebContent/WEB-INF");
-		List result = classSearcher.search(new ClassFilter() {
-
-			public boolean filter(ClassData classData) {
-				try {
-					if (wildcardMatch("org.jleaf.*", classData.getClassName())) {
-						Class classz = Class.forName(classData.getClassName());
-						if (Error.class.isAssignableFrom(classz)) {
-							return true;
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return false;
-			}
-		});
-		log.debug("size:" + result.size() + ":" + result);
-	}
 }

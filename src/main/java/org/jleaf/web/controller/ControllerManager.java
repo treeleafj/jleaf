@@ -30,29 +30,29 @@ public class ControllerManager {
 	/**
 	 * actionCache缓存Map
 	 */
-	private static Map<String, ActionCache> actionCaches = new HashMap();
+	private Map<String, ActionCache> actionCaches = new HashMap();
 
 	/**
 	 * 控制器
 	 */
-	private static Map<String, ControllerData> controllers = new HashMap();
+	private Map<String, ControllerData> controllers = new HashMap();
 	
 	/**
 	 * 全局拦截器
 	 */
-	private static List<Interceptor> overallInterceptor = new LinkedList<Interceptor>();
-
+	private List<Interceptor> overallInterceptor = new LinkedList<Interceptor>();
+	
 	/**
 	 * 判断是否包含指定URI的Controller
 	 */
-	public static boolean contains(String controllerUri) {
+	public boolean contains(String controllerUri) {
 		return contains(controllerUri, HttpMethod.NONE);
 	}
 
 	/**
 	 * 判断是否包含指定URI和httpmethod的Controller
 	 */
-	public static boolean contains(String controllerUri, HttpMethod httpMethod) {
+	public boolean contains(String controllerUri, HttpMethod httpMethod) {
 		ControllerData data = controllers.get(controllerUri);
 		if (data != null
 				&& (httpMethod == HttpMethod.NONE || data.getControllerAno()
@@ -69,7 +69,7 @@ public class ControllerManager {
 	 * @param actionReq
 	 * @return
 	 */
-	public static Result doAction(ActionRequest actionReq) {
+	public Result doAction(ActionRequest actionReq) {
 		try{
 			ActionCache action = getActionCache(actionReq);
 			if(action == null){
@@ -106,7 +106,7 @@ public class ControllerManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ActionCache getActionCache(ActionRequest actionReq)
+	public ActionCache getActionCache(ActionRequest actionReq)
 			throws Exception {
 
 		AnalyzeResult aResult = actionReq.getAnalyzeResult();
@@ -139,11 +139,10 @@ public class ControllerManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ActionCache newInstance(ActionRequest actionReq) throws Exception{
+	public ActionCache newInstance(ActionRequest actionReq) throws Exception{
 		AnalyzeResult aResult = actionReq.getAnalyzeResult();
 		
-		ControllerData cd = ControllerManager.getControllerData(aResult
-				.getControllerUri());
+		ControllerData cd = getControllerData(aResult.getControllerUri());
 
 		Class classz = cd.getControllerClass();
 
@@ -158,7 +157,7 @@ public class ControllerManager {
 	 * 执行所有全局的Interceptor
 	 * @param actionReq
 	 */
-	public static boolean doOverallInterceptor(ActionRequest actionReq) {
+	public boolean doOverallInterceptor(ActionRequest actionReq) {
 	
 		if (overallInterceptor.size() > 0) {
 			ActionInvocation ai = new ActionInvocation(overallInterceptor, actionReq);
@@ -175,7 +174,7 @@ public class ControllerManager {
 	 * 
 	 * @param controllerUri
 	 */
-	public static ControllerData getControllerData(String controllerUri) {
+	public ControllerData getControllerData(String controllerUri) {
 		return controllers.get(controllerUri);
 	}
 
@@ -185,7 +184,7 @@ public class ControllerManager {
 	 * @param classz
 	 *            Controller的类型
 	 */
-	public static void add(Class classz) {
+	public void add(Class classz) {
 
 		Controller c = (Controller) classz.getAnnotation(Controller.class);
 
@@ -209,7 +208,7 @@ public class ControllerManager {
 	/**
 	 * 添加一个Interceptor
 	 */
-	public static void addInterceptor(Class<? extends Interceptor> interceptor) {
+	public void addInterceptor(Class<? extends Interceptor> interceptor) {
 		try {
 			overallInterceptor.add(interceptor.newInstance());
 		} catch (Exception e) {
@@ -220,7 +219,7 @@ public class ControllerManager {
 	/**
 	 * 添加一个Interceptor
 	 */
-	public static void addInterceptor(Interceptor interceptor) {
+	public void addInterceptor(Interceptor interceptor) {
 		overallInterceptor.add(interceptor);
 	}
 
@@ -229,7 +228,7 @@ public class ControllerManager {
 	 * 
 	 * @param className
 	 */
-	private static String getControllerDefaultName(String className) {
+	private String getControllerDefaultName(String className) {
 
 		if (!className.equals("Controller") && className.endsWith("Controller")) {
 			int index = className.lastIndexOf("Controller");

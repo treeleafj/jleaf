@@ -32,6 +32,8 @@ public class JleafMVC {
 	private static Logger log = Logger.getLogger(JleafMVC.class);
 
 	private static JleafMVC mvc = new JleafMVC();
+	
+	private ControllerManager manager = new ControllerManager();
 
 	private JleafMVC() {
 
@@ -41,13 +43,22 @@ public class JleafMVC {
 		return mvc;
 	}
 	
-	
 	/**
 	 * 扫描指定包路径下的控制器,拦截器
 	 * @param ps 要扫描控制器和拦截器的包路径,例如 {"com.demo.*","com.demo2.*"}
 	 */
-	@SuppressWarnings("unchecked")
 	public void scan(String[] ps){
+		this.scan(null,ps);
+	}
+	
+	
+	/**
+	 * 扫描指定包路径下的控制器,拦截器
+	 * @param basePath 扫描的路径
+	 * @param ps 要扫描控制器和拦截器的包路径,例如 {"com.demo.*","com.demo2.*"}
+	 */
+	@SuppressWarnings("unchecked")
+	public void scan(String basePath,String[] ps){
 		
 		if(ps.length == 0){
 			ps = new String[] {"*"};
@@ -55,7 +66,7 @@ public class JleafMVC {
 		
 		final String[] packages = ps;
 		
-		ClassSearcher classSearcher = new ClassSearcher();
+		ClassSearcher classSearcher = new ClassSearcher(basePath);
 		try {
 			List<ClassData> result = classSearcher.search(new ClassFilter() {
 				
@@ -87,7 +98,7 @@ public class JleafMVC {
 				Class<?> classz = Class.forName(data.getClassName());
 				
 				if (classz.getAnnotation(Controller.class) != null) {
-					ControllerManager.add(classz);
+					manager.add(classz);
 				}else{
 					interceptors.add((Class<? extends Interceptor>) classz);
 				}
@@ -110,7 +121,7 @@ public class JleafMVC {
 			});
 			
 			for(Class<? extends Interceptor> classz : interceptors){
-				ControllerManager.addInterceptor(classz);
+				manager.addInterceptor(classz);
 			}
 			
 		}catch(Exception e){
@@ -143,12 +154,15 @@ public class JleafMVC {
 	public Result doAction(ActionRequest ar) {
 
 		// 如果ControllerManager里包含了这个地址,则执行Action操作
-		if (ControllerManager
-				.contains(ar.getAnalyzeResult().getControllerUri())) {
-			return ControllerManager.doAction(ar);
+		if (manager.contains(ar.getAnalyzeResult().getControllerUri())) {
+			return manager.doAction(ar);
 		}
 		throw new NotFindError("未找到匹配的"
 				+ ar.getAnalyzeResult().getControllerUri());
+	}
+	
+	public ControllerManager getControllerManager(){
+		return this.manager;
 	}
 
 }

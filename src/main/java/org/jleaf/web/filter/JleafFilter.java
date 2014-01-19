@@ -33,12 +33,16 @@ public class JleafFilter implements Filter {
 	private Logger log = Logger.getLogger(this.getClass());
 
 	public void init(FilterConfig filterConfig) throws ServletException {
+		
 		String scan = filterConfig.getInitParameter("scan");
 		if(!"false".equals(scan)){
 			String packages = filterConfig.getInitParameter("package");
 			if(packages != null){
-				//扫描注解
+				//扫描classes目录下注解
 				JleafMVC.getInstance().scan(packages.split(","));
+				//扫描lib目录下注解
+				String libDir = filterConfig.getServletContext().getRealPath("/WEB-INF/lib");
+				JleafMVC.getInstance().scan(libDir,packages.split(","));
 			}
 		}
 	}
