@@ -11,4 +11,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ClearInterceptor {
 	
+	/**
+	 * 清除力度
+	 * @return
+	 */
+	ClearLevel clearLevel() default ClearLevel.NONE;
+	
 }

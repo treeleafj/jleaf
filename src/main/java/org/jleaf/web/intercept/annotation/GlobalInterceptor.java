@@ -20,4 +20,9 @@ public @interface GlobalInterceptor {
 	 * 顺序
 	 */
 	public int value();
+	
+	/**
+	 * 生存力度
+	 */
+	LiveLevel liveLevel() default LiveLevel.NONE;
 }

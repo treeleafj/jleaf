@@ -4,19 +4,18 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.jleaf.web.intercept.ActionInvocation;
 import org.jleaf.web.intercept.Interceptor;
 import org.jleaf.web.intercept.annotation.ClearInterceptor;
+import org.jleaf.web.intercept.annotation.LiveLevel;
+import org.jleaf.web.intercept.annotation.GlobalInterceptor;
 import org.jleaf.web.intercept.annotation.Interceptors;
 
 public class ActionCache {
-	
-	private static Logger log = Logger.getLogger(ControllerManager.class);
 
-	private Class<?> classz;
+	private Class<?> controllerClassz;
 
-	private Object obj;
+	private Object controller;
 
 	private Method method;
 
@@ -25,16 +24,18 @@ public class ActionCache {
 	private HttpMethod httpMethod;
 
 	private List<Interceptor> intercepts;
+	
+	private List<Interceptor> globalInterceptor;
 
 	/**
 	 * 是否清除全局Interceptor
 	 */
 	private boolean isClearOverallInterceptor = false;
 
-	public ActionCache(Class<?> classz, Method method) throws Exception {
+	public ActionCache(Class<?> classz, Method method,List<Interceptor> globalInterceptor) throws Exception {
 
-		this.classz = classz;
-		this.obj = classz.newInstance();
+		this.controllerClassz = classz;
+		this.controller = classz.newInstance();
 		this.method = method;
 
 		org.jleaf.web.controller.annotation.Method methodAno = method
@@ -47,17 +48,15 @@ public class ActionCache {
 			this.httpMethod = HttpMethod.NONE;
 		}
 
-		// 判断是否清除所有全局Interceptor
-		ClearInterceptor clearInterceptor = classz
-				.getAnnotation(ClearInterceptor.class);
-		if (clearInterceptor != null) {
-			this.isClearOverallInterceptor = true;
-		} else {
+		// 判断是否清除全局Interceptor
+		ClearInterceptor clearInterceptor = classz.getAnnotation(ClearInterceptor.class);
+		if (clearInterceptor == null) {
 			clearInterceptor = method.getAnnotation(ClearInterceptor.class);
-			if (clearInterceptor != null) {
-				this.isClearOverallInterceptor = true;
-			}
 		}
+		if(clearInterceptor != null){
+			this.isClearOverallInterceptor = true;
+		}
+			
 
 		//解析私有的Interceptor
 		Interceptors interceptorsAno = classz.getAnnotation(Interceptors.class);
@@ -83,14 +82,33 @@ public class ActionCache {
 				intercepts.add(c.newInstance());
 			}
 		}
+		
+		//解析全局的Interceptor
+		if(this.isClearOverallInterceptor){
+			List<Interceptor> newGlobalInterceptor = new ArrayList<Interceptor>();
+			for(Interceptor interceptor : globalInterceptor){
+				GlobalInterceptor giAno = interceptor.getClass().getAnnotation(GlobalInterceptor.class);
+				if(giAno != null){
+					if(giAno.liveLevel() == LiveLevel.HEIGHT){
+						newGlobalInterceptor.add(interceptor);
+					}
+				}
+					
+			}
+			this.globalInterceptor = newGlobalInterceptor;
+		}else{
+			this.globalInterceptor = globalInterceptor;
+		}
+		
+	}
+	
+
+	public Class<?> getControllerClass() {
+		return controllerClassz;
 	}
 
-	public Class<?> getClassz() {
-		return classz;
-	}
-
-	public Object getObj() {
-		return obj;
+	public Object getController() {
+		return controller;
 	}
 
 	public Method getMethod() {
@@ -105,16 +123,35 @@ public class ActionCache {
 		return httpMethod;
 	}
 
+	/**
+	 * 是否带有@ClearInterceptor
+	 */
 	public boolean isClearOverallInterceptor() {
 		return isClearOverallInterceptor;
 	}
 
+	/**
+	 * 执行私有的Interceptor
+	 * @param actionReq
+	 * @return 返回是否正常结束
+	 */
 	public boolean invokeInterceptor(ActionRequest actionReq){
 		if(this.intercepts != null){
 			ActionInvocation ai = new ActionInvocation(this.intercepts, actionReq);
-			boolean b = ai.invoke();
-			log.debug("私有Interceptor执行完毕.");
-			return b;
+			return ai.invoke();
+		}
+		return true;
+	}
+	
+	/**
+	 * 执行全局的Interceptor
+	 * @param actionReq
+	 * @return 返回是否正常结束
+	 */
+	public boolean invokeGlobalInterceptor(ActionRequest actionReq){
+		if (globalInterceptor.size() > 0) {
+			ActionInvocation ai = new ActionInvocation(globalInterceptor, actionReq);
+			return ai.invoke();
 		}
 		return true;
 	}

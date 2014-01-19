@@ -11,7 +11,6 @@ import org.jleaf.error.NotFindError;
 import org.jleaf.web.controller.annotation.Controller;
 import org.jleaf.web.controller.result.NullResult;
 import org.jleaf.web.controller.result.Result;
-import org.jleaf.web.intercept.ActionInvocation;
 import org.jleaf.web.intercept.Interceptor;
 
 /**
@@ -30,17 +29,17 @@ public class ControllerManager {
 	/**
 	 * actionCache缓存Map
 	 */
-	private Map<String, ActionCache> actionCaches = new HashMap();
+	private Map<String, ActionCache> actionCaches = new HashMap<String, ActionCache>();
 
 	/**
 	 * 控制器
 	 */
-	private Map<String, ControllerData> controllers = new HashMap();
+	private Map<String, ControllerData> controllers = new HashMap<String, ControllerData>();
 	
 	/**
 	 * 全局拦截器
 	 */
-	private List<Interceptor> overallInterceptor = new LinkedList<Interceptor>();
+	private List<Interceptor> globalInterceptor = new LinkedList<Interceptor>();
 	
 	/**
 	 * 判断是否包含指定URI的Controller
@@ -79,23 +78,23 @@ public class ControllerManager {
 						+ ":" + aResult.getHttpMethod());
 			}else{
 				
-				if(!action.isClearOverallInterceptor()){
-					boolean b = doOverallInterceptor(actionReq);//执行全局的Interceptor
-					if(b == false){
-						return NULL_RESULT;
+				boolean b = action.invokeGlobalInterceptor(actionReq);//执行全局的Interceptor
+				log.debug("=====全局Interceptor执行完毕.");
+				if(b){
+					b = action.invokeInterceptor(actionReq);//执行私有的Interceptor
+					log.debug("=====私有Interceptor执行完毕.");
+					if(b){
+						return (Result)action.getMethod().invoke(action.getController(), actionReq);
 					}
+					log.debug("=====执行私有Interceptor中,出现终止!");
 				}
+				log.debug("=====执行Interceptor中,出现终止!");
+				return NULL_RESULT;
 				
-				action.invokeInterceptor(actionReq);//执行私有的Interceptor
-				
-				log.debug("执行method");
-				
-				return (Result)action.getMethod().invoke(action.getObj(), actionReq);
 			}
 		}catch(NotFindError e){
 			throw e;
 		}catch(Exception e){
-			e.printStackTrace();
 			throw new Error(e.fillInStackTrace());
 		}
 	}
@@ -120,7 +119,7 @@ public class ControllerManager {
 			synchronized(ControllerManager.class){
 				if (actionCache == null) {
 					log.debug("未找到ActionCache,进行初始化.");
-					actionCache = newInstance(actionReq);
+					actionCache = createActionCache(actionReq);
 					actionCaches.put(key, actionCache);//缓存
 				}
 				actionCache = actionCaches.get(key);
@@ -139,39 +138,20 @@ public class ControllerManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public ActionCache newInstance(ActionRequest actionReq) throws Exception{
+	public ActionCache createActionCache(ActionRequest actionReq) throws Exception{
 		AnalyzeResult aResult = actionReq.getAnalyzeResult();
 		
 		ControllerData cd = getControllerData(aResult.getControllerUri());
 
 		Class classz = cd.getControllerClass();
 
-		Method method = classz.getMethod(aResult.getMethod(),
-				ActionRequest.class);
-		ActionCache actionCache = new ActionCache(classz, method);
+		Method method = classz.getMethod(aResult.getMethod(), ActionRequest.class);
+		ActionCache actionCache = new ActionCache(classz, method, globalInterceptor);
 		return actionCache;
-	}
-	
-
-	/**
-	 * 执行所有全局的Interceptor
-	 * @param actionReq
-	 */
-	public boolean doOverallInterceptor(ActionRequest actionReq) {
-	
-		if (overallInterceptor.size() > 0) {
-			ActionInvocation ai = new ActionInvocation(overallInterceptor, actionReq);
-			boolean b = ai.invoke();
-			log.debug("全局Interceptor执行完毕.");
-			return b;
-		}
-		
-		return true;
 	}
 
 	/**
 	 * 获得ControllerData
-	 * 
 	 * @param controllerUri
 	 */
 	public ControllerData getControllerData(String controllerUri) {
@@ -210,9 +190,9 @@ public class ControllerManager {
 	 */
 	public void addInterceptor(Class<? extends Interceptor> interceptor) {
 		try {
-			overallInterceptor.add(interceptor.newInstance());
+			globalInterceptor.add(interceptor.newInstance());
 		} catch (Exception e) {
-			throw new Error(e.fillInStackTrace());
+			throw new Error(e);
 		}
 	}
 	
@@ -220,7 +200,7 @@ public class ControllerManager {
 	 * 添加一个Interceptor
 	 */
 	public void addInterceptor(Interceptor interceptor) {
-		overallInterceptor.add(interceptor);
+		globalInterceptor.add(interceptor);
 	}
 
 	/**
@@ -247,5 +227,12 @@ public class ControllerManager {
 
 		return className;
 
+	}
+
+	/**
+	 * 获得所有全局拦截器
+	 */
+	public List<Interceptor> getGolbalInterceptor() {
+		return globalInterceptor;
 	}
 }
