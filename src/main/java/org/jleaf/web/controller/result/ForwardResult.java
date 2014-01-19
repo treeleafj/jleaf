@@ -12,8 +12,6 @@ import org.jleaf.web.filter.JleafMVC;
 
 public class ForwardResult extends Result{
 	
-	private static JleafMVC mvc = new JleafMVC();
-	
 	private String address;
 	private String method;
 	
@@ -41,11 +39,11 @@ public class ForwardResult extends Result{
 			
 			AnalyzeParam analyzeParam = new AnalyzeParam(address,method,req,resp);
 
-			AnalyzeResult analyzeResult = mvc.analyze(analyzeParam);//解析Request
+			AnalyzeResult analyzeResult = JleafMVC.getInstance().analyze(analyzeParam);//解析Request
 			
 			ActionRequest actionRequest = new ActionRequest(analyzeResult, req.getParameterMap(), WebUtils.ses2Map(req.getSession()));
 			
-			Result result = mvc.doAction(actionRequest);
+			Result result = JleafMVC.getInstance().doAction(actionRequest);
 			if (result != null) {
 				result.render(req, resp);
 			}
@@ -54,7 +52,6 @@ public class ForwardResult extends Result{
 			rd.forward(req, resp);
 			
 		}
-		
 	}
 
 }

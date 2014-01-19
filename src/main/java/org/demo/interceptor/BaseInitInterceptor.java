@@ -6,7 +6,9 @@ import org.apache.log4j.Logger;
 import org.jleaf.utils.WebUtils;
 import org.jleaf.web.intercept.ActionInvocation;
 import org.jleaf.web.intercept.Interceptor;
+import org.jleaf.web.intercept.annotation.GlobalInterceptor;
 
+@GlobalInterceptor(2)
 public class BaseInitInterceptor implements Interceptor {
 	
 	private Logger log = Logger.getLogger(this.getClass());

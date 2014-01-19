@@ -21,8 +21,6 @@ public class MVCTest {
 		
 		ControllerManager.addInterceptor(BaseInitInterceptor.class);
 	}
-	
-	private static JleafMVC mvc = new JleafMVC();
 
 	@Test
 	public void test() {
@@ -34,7 +32,7 @@ public class MVCTest {
 		System.out.println("执行完毕,总用时:" + (System.currentTimeMillis() - t));
 	}
 	
-	private void actionLogin(){
+	public void actionLogin(){
 		Map params = new HashMap();
 		Map session = new HashMap();
 		
@@ -44,11 +42,11 @@ public class MVCTest {
 		
 		ActionRequest actionRequest = new ActionRequest(analyzeResult, params, session);
 		
-		Result result = mvc.doAction(actionRequest);
+		Result result = JleafMVC.getInstance().doAction(actionRequest);
 		System.out.println("执行完毕:" + (System.currentTimeMillis() - t));
 	}
 	
-	private void actionIndex(){
+	public void actionIndex(){
 		Map params = new HashMap();
 		Map session = new HashMap();
 		
@@ -58,7 +56,7 @@ public class MVCTest {
 		
 		ActionRequest actionRequest = new ActionRequest(analyzeResult, params, session);
 		
-		Result result = mvc.doAction(actionRequest);
+		Result result = JleafMVC.getInstance().doAction(actionRequest);
 		System.out.println("执行完毕:" + (System.currentTimeMillis() - t));
 	}
 

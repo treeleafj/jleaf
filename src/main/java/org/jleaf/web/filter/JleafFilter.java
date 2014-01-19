@@ -24,19 +24,23 @@ import org.jleaf.web.controller.result.Result;
 
 /**
  * 请求封装从这里开始
+ * 
  * @author leaf
  * @date 2014-1-2 下午2:41:01
  */
 public class JleafFilter implements Filter {
-	
+
 	private Logger log = Logger.getLogger(this.getClass());
 
-	private JleafMVC mvc = new JleafMVC();
-	
-	private static long count = 0;
-
 	public void init(FilterConfig filterConfig) throws ServletException {
-
+		String scan = filterConfig.getInitParameter("scan");
+		if(!"false".equals(scan)){
+			String packages = filterConfig.getInitParameter("package");
+			if(packages != null){
+				//扫描注解
+				JleafMVC.getInstance().scan(packages.split(","));
+			}
+		}
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response,
@@ -44,55 +48,57 @@ public class JleafFilter implements Filter {
 
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
-		
-		log.debug(req.getServletPath());
-		
-		//如果不是静态资源文件
+
+		log.debug("请求地址:" + req.getServletPath());
+
+		// 如果不是静态资源文件
 		if (!WebUtils.isStaticResource(req.getServletPath())) {
-			
+
 			long t = System.currentTimeMillis();
-			
-			AnalyzeParam analyzeParam = new AnalyzeParam(req,resp);
-			
-			AnalyzeResult analyzeResult = mvc.analyze(analyzeParam);//解析用户请求
-			
+
+			AnalyzeParam analyzeParam = new AnalyzeParam(req, resp);
+
+			AnalyzeResult analyzeResult = JleafMVC.getInstance().analyze(
+					analyzeParam);// 解析用户请求
+
 			setReqAndResp(req, resp);
-			
-			ActionRequest actionRequest = new ActionRequest(analyzeResult, req.getParameterMap(), new SessionAdapterMap(req.getSession()));
-			try{
-				Result result = mvc.doAction(actionRequest);
+
+			ActionRequest actionRequest = new ActionRequest(analyzeResult,
+					req.getParameterMap(), new SessionAdapterMap(
+							req.getSession()));
+			try {
+				Result result = JleafMVC.getInstance().doAction(actionRequest);
 				log.debug("返回result");
 				if (result != null) {
 					result.render(req, resp);
 				}
-			}catch(NotFindError e){
-				log.error("NotFindError:",e);
+			} catch (NotFindError e) {
+				log.error("NotFindError:", e);
 				chain.doFilter(request, response);
-			}catch (Exception e) {
+			} catch (Exception e) {
 				throw new Error(e);
-			}finally{
+			} finally {
 				removeReqAndResp();
 			}
-			
-			log.debug("Action执行完毕,用时:" + (System.currentTimeMillis() - t));
-			
-		}else{
+
+			log.info("Action执行完毕,用时:" + (System.currentTimeMillis() - t));
+
+		} else {
 			chain.doFilter(request, response);
 		}
-		
-		log.debug("第" + ++count + "次请求");
+
 	}
 
 	public void destroy() {
 
 	}
-	
-	private void setReqAndResp(HttpServletRequest req,HttpServletResponse resp){
+
+	private void setReqAndResp(HttpServletRequest req, HttpServletResponse resp) {
 		HttpServletRequestInvoke.setRequest(req);
 		HttpServletResponseInvoke.setResponse(resp);
 	}
-	
-	private void removeReqAndResp(){
+
+	private void removeReqAndResp() {
 		HttpServletRequestInvoke.remove();
 		HttpServletResponseInvoke.remove();
 	}

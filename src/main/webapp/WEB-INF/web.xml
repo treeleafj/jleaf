@@ -10,16 +10,19 @@
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
-	
-	<servlet>
-		<servlet-name>jleafInit</servlet-name>
-		<servlet-class>org.demo.servlet.InitServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	
 	<filter>
 		<filter-name>jleaf</filter-name>
 		<filter-class>org.jleaf.web.filter.JleafFilter</filter-class>
+		<!-- 是否启用扫描功能,默认是启用的 -->
+		<init-param>
+			<param-name>scan</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<!-- 扫描的路径,可以设置多个,用逗号隔开 -->
+		<init-param>
+			<param-name>package</param-name>
+			<param-value>org.demo.*</param-value>
+		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>jleaf</filter-name>
