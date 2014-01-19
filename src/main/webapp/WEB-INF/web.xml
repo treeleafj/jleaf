@@ -16,7 +16,7 @@
 		<!-- 是否启用扫描功能,默认是启用的 -->
 		<init-param>
 			<param-name>scan</param-name>
-			<param-value>false</param-value>
+			<param-value>true</param-value>
 		</init-param>
 		<!-- 扫描的路径,可以设置多个,用逗号隔开 -->
 		<init-param>
