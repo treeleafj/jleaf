@@ -33,7 +33,7 @@ public class MVCTest {
 	@Test
 	public void test() {
 		long t = System.currentTimeMillis();
-		for(int i = 0; i < 1000; i++){
+		for(int i = 0; i < 10; i++){
 			actionJson();
 			actionIndex();
 		}
