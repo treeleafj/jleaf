@@ -5,7 +5,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-        <property name="context-root" value="jleaf"/>
         <property name="java-output-path" value="/jleaf/src/main/webapp/WEB-INF/classes"/>
+        <property name="context-root" value="mvc"/>
     </wb-module>
 </project-modules>
