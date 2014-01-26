@@ -11,6 +11,7 @@ import org.jleaf.error.NotFindError;
 import org.jleaf.web.controller.annotation.Controller;
 import org.jleaf.web.controller.result.NullResult;
 import org.jleaf.web.controller.result.Result;
+import org.jleaf.web.intercept.ActionInvocation;
 import org.jleaf.web.intercept.Interceptor;
 
 /**
@@ -78,24 +79,18 @@ public class ControllerManager {
 						+ ":" + aResult.getHttpMethod());
 			}else{
 				
-				boolean b = action.invokeGlobalInterceptor(actionReq);//执行全局的Interceptor
-				log.debug("=====全局Interceptor执行完毕.");
-				if(b){
-					b = action.invokeInterceptor(actionReq);//执行私有的Interceptor
-					log.debug("=====私有Interceptor执行完毕.");
-					if(b){
-						return (Result)action.getMethod().invoke(action.getController(), actionReq);
-					}
-					log.debug("=====执行私有Interceptor中,出现终止!");
+				ActionInvocation ai = action.invokeInterceptor(actionReq);//执行所有的Interceptor
+				if(ai.getResult() != null){
+					return ai.getResult();
 				}
-				log.debug("=====执行Interceptor中,出现终止!");
+				log.debug("=====执行私有Interceptor中,出现终止!");
 				return NULL_RESULT;
 				
 			}
 		}catch(NotFindError e){
 			throw e;
 		}catch(Exception e){
-			throw new Error(e.fillInStackTrace());
+			throw new Error(e);
 		}
 	}
 

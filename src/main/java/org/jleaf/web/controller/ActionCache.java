@@ -5,12 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jleaf.web.intercept.ActionInvocation;
+import org.jleaf.web.intercept.BasicDoActionInterceptor;
 import org.jleaf.web.intercept.Interceptor;
 import org.jleaf.web.intercept.annotation.ClearInterceptor;
 import org.jleaf.web.intercept.annotation.LiveLevel;
 import org.jleaf.web.intercept.annotation.GlobalInterceptor;
 import org.jleaf.web.intercept.annotation.Interceptors;
 
+/**
+ * 存放Action的信息
+ * @author leaf
+ * @date 2014-1-26 下午2:50:22
+ */
 public class ActionCache {
 
 	private Class<?> controllerClassz;
@@ -23,9 +29,9 @@ public class ActionCache {
 
 	private HttpMethod httpMethod;
 
-	private List<Interceptor> intercepts;
+	private List<Interceptor> intercepts = new ArrayList<Interceptor>();//私有Interceptor
 	
-	private List<Interceptor> globalInterceptor;
+	private List<Interceptor> globalInterceptor;//全局Interceptor
 
 	/**
 	 * 是否清除全局Interceptor
@@ -62,22 +68,18 @@ public class ActionCache {
 		Interceptors interceptorsAno = classz.getAnnotation(Interceptors.class);
 		if(interceptorsAno != null){
 			Class<? extends Interceptor>[] interceptClassz = interceptorsAno.value();
-			intercepts = new ArrayList<Interceptor>();
 			for(Class<? extends Interceptor> c : interceptClassz){
 				intercepts.add(c.newInstance());
 			}
 		}
 		
 		if(method.getAnnotation(ClearInterceptor.class) != null){
-			intercepts = null;
+			intercepts.clear();
 		}
 		
 		interceptorsAno = method.getAnnotation(Interceptors.class);
 		if(interceptorsAno != null){
 			Class<? extends Interceptor>[] interceptClassz = interceptorsAno.value();
-			if(intercepts == null){
-				intercepts = new ArrayList<Interceptor>();
-			}
 			for(Class<? extends Interceptor> c : interceptClassz){
 				intercepts.add(c.newInstance());
 			}
@@ -100,6 +102,9 @@ public class ActionCache {
 			this.globalInterceptor = globalInterceptor;
 		}
 		
+		
+		this.globalInterceptor.addAll(this.intercepts);
+		this.globalInterceptor.add(new BasicDoActionInterceptor());
 	}
 	
 
@@ -131,29 +136,14 @@ public class ActionCache {
 	}
 
 	/**
-	 * 执行私有的Interceptor
+	 * 执行Interceptor
 	 * @param actionReq
-	 * @return 返回是否正常结束
+	 * @return ActionInvocation
 	 */
-	public boolean invokeInterceptor(ActionRequest actionReq){
-		if(this.intercepts != null){
-			ActionInvocation ai = new ActionInvocation(this.intercepts, actionReq);
-			return ai.invoke();
-		}
-		return true;
-	}
-	
-	/**
-	 * 执行全局的Interceptor
-	 * @param actionReq
-	 * @return 返回是否正常结束
-	 */
-	public boolean invokeGlobalInterceptor(ActionRequest actionReq){
-		if (globalInterceptor.size() > 0) {
-			ActionInvocation ai = new ActionInvocation(globalInterceptor, actionReq);
-			return ai.invoke();
-		}
-		return true;
+	public ActionInvocation invokeInterceptor(ActionRequest actionReq){
+		ActionInvocation ai = new ActionInvocation(globalInterceptor, this, actionReq);
+		ai.invoke();//执行所有Interceptor
+		return ai;
 	}
 
 }

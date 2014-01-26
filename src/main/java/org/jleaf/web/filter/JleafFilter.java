@@ -29,31 +29,33 @@ import org.jleaf.web.controller.result.Result;
  * @date 2014-1-2 下午2:41:01
  */
 public class JleafFilter implements Filter {
-
+	
 	private Logger log = Logger.getLogger(this.getClass());
 
 	public void init(FilterConfig filterConfig) throws ServletException {
 		
 		String scan = filterConfig.getInitParameter("scan");
+		String scanJar = filterConfig.getInitParameter("scan-jar");
 		if(!"false".equals(scan)){
 			String packages = filterConfig.getInitParameter("package");
 			if(packages != null){
 				//扫描classes目录下注解
 				JleafMVC.getInstance().scan(packages.split(","));
-				//扫描lib目录下注解
-				String libDir = filterConfig.getServletContext().getRealPath("/WEB-INF/lib");
-				JleafMVC.getInstance().scan(libDir,packages.split(","));
+				
+				if(!"false".equals(scanJar)){
+					//扫描lib目录下注解
+					String libDir = filterConfig.getServletContext().getRealPath("/WEB-INF/lib");
+					JleafMVC.getInstance().scan(libDir,packages.split(","));
+				}
 			}
 		}
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-
+		
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
-
-		log.debug("请求地址:" + req.getServletPath());
 
 		// 如果不是静态资源文件
 		if (!WebUtils.isStaticResource(req.getServletPath())) {
@@ -72,7 +74,6 @@ public class JleafFilter implements Filter {
 							req.getSession()));
 			try {
 				Result result = JleafMVC.getInstance().doAction(actionRequest);
-				log.debug("返回result");
 				if (result != null) {
 					result.render(req, resp);
 				}

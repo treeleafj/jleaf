@@ -18,6 +18,11 @@
 			<param-name>scan</param-name>
 			<param-value>true</param-value>
 		</init-param>
+		<!-- 是否扫描WEB-INF/lib下的jar包,默认是扫描的 -->
+		<init-param>
+			<param-name>scan-jar</param-name>
+			<param-value>false</param-value>
+		</init-param>
 		<!-- 扫描的路径,可以设置多个,用逗号隔开 -->
 		<init-param>
 			<param-name>package</param-name>

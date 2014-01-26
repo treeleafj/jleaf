@@ -7,5 +7,6 @@ package org.jleaf.web.intercept.annotation;
  */
 public enum LiveLevel {
 	NONE,//默认被ClearLevel.NONE清除
-	HEIGHT;//只会被ClearLevel.CLEARALL清除
+	HEIGHT,//只会被ClearLevel.CLEARALL清除
+	NOTCALEAR;//不会被@ClearInterceptor掉
 }

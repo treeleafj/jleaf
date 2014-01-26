@@ -5,6 +5,8 @@ import java.util.List;
 
 public class QueryObject extends PageObject{
 	
+	private Long id;
+	
 	protected String orderBy = "id";
 	protected String orderType = "DESC";
 	protected List<Object> params = new ArrayList<Object>();
@@ -108,6 +110,18 @@ public class QueryObject extends PageObject{
 	}
 
 	public void customizeQuery(){
-		
+		if(this.id != null){
+			this.addQuery("id", this.id, "=");
+		}
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	
 }
