@@ -8,6 +8,7 @@ import org.jleaf.web.intercept.ActionInvocation;
 import org.jleaf.web.intercept.BasicDoActionInterceptor;
 import org.jleaf.web.intercept.Interceptor;
 import org.jleaf.web.intercept.annotation.ClearInterceptor;
+import org.jleaf.web.intercept.annotation.ClearLevel;
 import org.jleaf.web.intercept.annotation.LiveLevel;
 import org.jleaf.web.intercept.annotation.GlobalInterceptor;
 import org.jleaf.web.intercept.annotation.Interceptors;
@@ -91,7 +92,7 @@ public class ActionCache {
 			for(Interceptor interceptor : globalInterceptor){
 				GlobalInterceptor giAno = interceptor.getClass().getAnnotation(GlobalInterceptor.class);
 				if(giAno != null){
-					if(giAno.liveLevel() == LiveLevel.HEIGHT){
+					if(giAno.liveLevel() == LiveLevel.NOTCALEAR || (giAno.liveLevel() == LiveLevel.HEIGHT && clearInterceptor.clearLevel() != ClearLevel.CLEARALL)){
 						newGlobalInterceptor.add(interceptor);
 					}
 				}
