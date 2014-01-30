@@ -21,11 +21,11 @@ public class JsonResult extends Result{
 	@Override
 	public void render(HttpServletRequest req, HttpServletResponse resp) throws Exception{
 		if(obj == null){
-			resp.getOutputStream().print("{}");
+			resp.getWriter().print("{}");
 		}else{
 			String json = JsonUtils.toJSON(obj);
-			resp.getOutputStream().print(json);
-			resp.getOutputStream().close();
+			resp.getWriter().print(json);
+			resp.getWriter().close();
 		}
 	}
 
