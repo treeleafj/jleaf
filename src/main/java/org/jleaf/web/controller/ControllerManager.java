@@ -78,7 +78,6 @@ public class ControllerManager {
 						+ aResult.getControllerUri() + "." + aResult.getMethod()
 						+ ":" + aResult.getHttpMethod());
 			}else{
-				
 				ActionInvocation ai = action.invokeInterceptor(actionReq);//执行所有的Interceptor
 				if(ai.getResult() != null){
 					return ai.getResult();

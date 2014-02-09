@@ -3,125 +3,72 @@ package org.jleaf.format.query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QueryObject extends PageObject{
+/**
+ * 对查询进行封装
+ * 
+ * @author leaf
+ * @date 2014-2-1 下午2:57:19
+ */
+public class QueryObject extends PageObject {
 	
-	private Long id;
+	/**
+	 * 模糊匹配符号
+	 */
+	public final static String VAGUE = "#vmstr#";
+
+	/**
+	 * 排序方式 0升序, 1降序
+	 */
+	protected int order = 0;
+
+	/**
+	 * 排序字段
+	 */
+	protected String orderBy;
+
+	/**
+	 * 条件集合
+	 */
+	protected List<Condition> conditions = new ArrayList<Condition>();
 	
-	protected String orderBy = "id";
-	protected String orderType = "DESC";
-	protected List<Object> params = new ArrayList<Object>();
-
-	protected StringBuilder queryString = new StringBuilder("1=1");
-
-	public QueryObject setOrderBy(String orderBy) {
-		this.orderBy = orderBy;
+	public void init(){
+		
+	}
+	
+	public QueryObject addCondition(Condition whereCondition){
+		this.conditions.add(whereCondition);
 		return this;
 	}
-
-	public QueryObject setOrderType(String orderType) {
-		this.orderType = orderType;
-		return this;
+	
+	public QueryObject addCondition(String key,Object value,Operator expression){
+		return this.addCondition(new Condition(key,value,expression));
+	}
+	
+	public QueryObject addCondition(String key,Object value){
+		return this.addCondition(new Condition(key,value,Operator.EQUAL));
 	}
 
-
-	protected QueryObject setParams(List<Object> params) {
-		this.params = params;
-		return this;
+	public int getOrder() {
+		return order;
 	}
 
-	public String getOrderType() {
-		return this.orderType;
-	}
-
-	public String getOrder() {
-		return this.orderType;
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 	public String getOrderBy() {
-		return this.orderBy;
+		return orderBy;
 	}
 
-
-	public String getQuery() {
-		customizeQuery();
-		if ((this.queryString.indexOf("1=1 and") == 0)
-				&& (this.queryString.length() > "1=1 and ".length())) {
-			this.queryString.delete(0, "1=1 and ".length());
-		}
-		return this.queryString + orderString();
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
 	}
 
-	protected String orderString() {
-		StringBuilder orderString = new StringBuilder(" ");
-		if ((getOrderBy() != null) && (!("".equals(getOrderBy())))) {
-			orderString.append(" order by obj.").append(getOrderBy());
-		}
-		if ((getOrderType() != null) && (!("".equals(getOrderType())))) {
-			orderString.append(" ").append(getOrderType());
-		}
-		return orderString.toString();
+	public List<Condition> getConditions() {
+		return conditions;
 	}
 
-	public List<Object> getParameters() {
-		return this.params;
+	public void setConditions(List<Condition> conditions) {
+		this.conditions = conditions;
 	}
-
-	public QueryObject addQuery(String field, Object para, String expression) {
-		if ((field != null) && (para != null)) {
-			this.queryString.append(" and ").append(field).append(" ")
-					.append(handleExpression(expression)).append(" ? ");
-			this.params.add(para);
-		}
-		return this;
-	}
-
-	public QueryObject addQuery(String field, Object para, String expression,
-			String logic) {
-		if ((field != null) && (para != null)) {
-			this.queryString.append(" ").append(logic).append(" ")
-					.append(field).append(" ")
-					.append(handleExpression(expression)).append(" ? ");
-			this.params.add(para);
-		}
-		return this;
-	}
-
-	public QueryObject addQuery(String scope, Object[] paras) {
-		if (scope != null) {
-			this.queryString.append(" and ").append(scope);
-			if ((paras != null) && (paras.length > 0)) {
-				for (int i = 0; i < paras.length; ++i)
-					this.params.add(paras[i]);
-			}
-		}
-		return this;
-	}
-
-	public QueryObject addQuery(String scope) {
-		addQuery(scope, null);
-		return this;
-	}
-
-	private String handleExpression(String expression) {
-		if (expression == null) {
-			return "=";
-		}
-		return expression;
-	}
-
-	public void customizeQuery(){
-		if(this.id != null){
-			this.addQuery("id", this.id, "=");
-		}
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	
 }

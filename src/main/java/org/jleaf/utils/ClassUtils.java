@@ -14,8 +14,8 @@ public class ClassUtils {
 	/**
 	 * 当前类的泛型类型
 	 */
-	public static Class getGeneric(Object obj){
-		Type type = (Type) obj.getClass().getGenericSuperclass();
+	public static Class getGeneric(Class classType){
+		Type type = (Type) classType.getGenericSuperclass();
 		ParameterizedType pt = (ParameterizedType) type;
 		Class classz = ((Class) pt.getActualTypeArguments()[0]);
 		return classz;
@@ -24,8 +24,8 @@ public class ClassUtils {
 	/**
 	 * 当前类的泛型类型
 	 */
-	public static Class[] getGenerics(Object obj){
-		Type type = (Type) obj.getClass().getGenericSuperclass();
+	public static Class[] getGenerics(Class classType){
+		Type type = (Type) classType.getGenericSuperclass();
 		ParameterizedType pt = (ParameterizedType) type;
 		Type [] types = pt.getActualTypeArguments();
 		if(types[0] instanceof Class){

@@ -100,7 +100,7 @@ public class ActionCache {
 			}
 			this.globalInterceptor = newGlobalInterceptor;
 		}else{
-			this.globalInterceptor = globalInterceptor;
+			this.globalInterceptor = new ArrayList<Interceptor>(globalInterceptor);
 		}
 		
 		

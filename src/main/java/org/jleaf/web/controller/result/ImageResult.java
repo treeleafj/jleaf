@@ -6,7 +6,7 @@ import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jleaf.web.Config;
+import org.jleaf.web.HttpHeadUtils;
 
 /**
  * 图片专用Result(可用于一些动态生成的比如验证码)
@@ -42,7 +42,7 @@ public class ImageResult extends IOResult {
 	@Override
 	public void render(HttpServletRequest req, HttpServletResponse resp)
 			throws Exception {
-		resp.setContentType(Config.CONTENT_TYPE_JPEG);// 设定response的内容类型为图片
+		resp.setContentType(HttpHeadUtils.CONTENT_TYPE_JPEG);// 设定response的内容类型为图片
 		resp.setHeader("Cache-Control", "no-store");
 		resp.setHeader("Pragrma", "no-cache");// 设定response的缓存机制
 		resp.setDateHeader("Expires", 0);

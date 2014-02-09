@@ -3,7 +3,7 @@ package org.jleaf.web.controller.result;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jleaf.web.Config;
+import org.jleaf.web.HttpHeadUtils;
 
 /**
  * 字符串结果
@@ -22,8 +22,8 @@ public class StringResult extends Result {
 	@Override
 	public void render(HttpServletRequest req, HttpServletResponse resp)
 			throws Exception {
-		resp.setContentType(Config.CONTENT_TYPE_TEXT);
-		resp.setCharacterEncoding(Config.DEFAULT_CHART_SET);
+		resp.setContentType(HttpHeadUtils.CONTENT_TYPE_TEXT);
+		resp.setCharacterEncoding(HttpHeadUtils.DEFAULT_CHART_SET);
 		resp.getWriter().print(s);
 		resp.getWriter().close();
 	}
