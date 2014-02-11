@@ -78,7 +78,6 @@ public class JleafFilter implements Filter {
 					result.render(req, resp);
 				}
 			} catch (NotFindError e) {
-				log.error("NotFindError:", e);
 				chain.doFilter(request, response);
 			} catch (Exception e) {
 				throw new Error(e);

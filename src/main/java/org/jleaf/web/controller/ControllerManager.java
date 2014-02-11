@@ -113,7 +113,14 @@ public class ControllerManager {
 			synchronized(ControllerManager.class){
 				if (actionCache == null) {
 					log.debug("未找到ActionCache,进行初始化.");
-					actionCache = createActionCache(actionReq);
+					try{
+						actionCache = createActionCache(actionReq);
+					}catch(NoSuchMethodException e){
+						log.error("初始化失败,不存在方法" + actionReq.getAnalyzeResult().getMethod());
+						throw new NotFindError(e);
+					}catch(Exception e){
+						throw e;
+					}
 					actionCaches.put(key, actionCache);//缓存
 				}
 				actionCache = actionCaches.get(key);
