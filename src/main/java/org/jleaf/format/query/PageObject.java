@@ -2,36 +2,36 @@ package org.jleaf.format.query;
 
 /**
  * 分页对象
- * 
+ *
  * @author leaf
  * @date 2014-2-1 下午3:08:33
  */
 public class PageObject {
 
-	/**
-	 * 起始行
-	 */
-	private int start = 0;
-	
-	/**
-	 * 条数
-	 */
-	private int limit = 10;
+    /**
+     * 起始行
+     */
+    private int start = 0;
 
-	public int getStart() {
-		return start;
-	}
+    /**
+     * 条数
+     */
+    private int limit = 10;
 
-	public void setStart(int start) {
-		this.start = start;
-	}
+    public int getStart() {
+        return start;
+    }
 
-	public int getLimit() {
-		return limit;
-	}
+    public void setStart(int start) {
+        this.start = start;
+    }
 
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
 
 }

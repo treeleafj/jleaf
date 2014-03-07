@@ -1,74 +1,68 @@
 package org.jleaf.web.intercept;
 
-import java.util.List;
-
-import org.jleaf.web.controller.ActionCache;
-import org.jleaf.web.controller.ActionRequest;
+import org.jleaf.web.action.Action;
+import org.jleaf.web.controller.ControllerInfo;
 import org.jleaf.web.controller.result.Result;
 
 /**
- * 作为Interceptor的入参,包含了ActionRequest,和执行完成后返回的Result
- * 
+ * 作为Interceptor的入参
+ *
  * @author leaf
  * @date 2014-1-26 下午2:44:38
  */
 public class ActionInvocation {
 
-	private List<Interceptor> list;
+    private ControllerInfo controllerInfo;
 
-	private ActionCache actionCache;
+    private Object controller;
 
-	private ActionRequest actionRequest;
+    private Action action;
 
-	private Result result;
+    private Result result;
 
-	private int index = 0;
+    public ActionInvocation() {
+    }
 
-	public ActionInvocation() {
-		super();
-	}
+    public ActionInvocation(ControllerInfo controllerInfo, Action action) {
+        this.controllerInfo = controllerInfo;
+        this.action = action;
+    }
 
-	public ActionInvocation(List<Interceptor> list, ActionCache actionCache,
-			ActionRequest actionRequest) {
-		this.list = list;
-		this.actionCache = actionCache;
-		this.actionRequest = actionRequest;
-	}
+    public ActionInvocation(ControllerInfo controllerInfo, Action action, Object controller) {
+        this.controllerInfo = controllerInfo;
+        this.action = action;
+        this.controller = controller;
+    }
 
-	public boolean invoke() {
-		if (list != null && list.size() > 0 && index < list.size()) {
-			return list.get(index++).intercept(this);
-		} else {
-			return true;
-		}
-	}
+    public ControllerInfo getControllerInfo() {
+        return controllerInfo;
+    }
 
-	public ActionCache getActionCache() {
-		return actionCache;
-	}
+    public void setControllerInfo(ControllerInfo controllerInfo) {
+        this.controllerInfo = controllerInfo;
+    }
 
-	public void setActionCache(ActionCache actionCache) {
-		this.actionCache = actionCache;
-	}
+    public Object getController() {
+        return controller;
+    }
 
-	public List<Interceptor> getList() {
-		return list;
-	}
+    public void setController(Object controller) {
+        this.controller = controller;
+    }
 
-	public Result getResult() {
-		return result;
-	}
+    public Action getAction() {
+        return action;
+    }
 
-	public void setResult(Result result) {
-		this.result = result;
-	}
+    public void setAction(Action action) {
+        this.action = action;
+    }
 
-	public ActionRequest getActionRequest() {
-		return actionRequest;
-	}
+    public Result getResult() {
+        return result;
+    }
 
-	public void setActionRequest(ActionRequest actionRequest) {
-		this.actionRequest = actionRequest;
-	}
-
+    public void setResult(Result result) {
+        this.result = result;
+    }
 }

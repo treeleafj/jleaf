@@ -1,0 +1,7 @@
+eclipse.preferences.version=1
+encoding//src/demo/resources/jleaf.properties=UTF-8
+encoding//src/demo/resources/log4j.properties=UTF-8
+encoding//src/demo/resources/mongodb.properties=UTF-8
+encoding//src/main/java=UTF-8
+encoding//src/main/resources/org/jleaf/config/jleaf.properties=UTF-8
+encoding//src/test/java=UTF-8
