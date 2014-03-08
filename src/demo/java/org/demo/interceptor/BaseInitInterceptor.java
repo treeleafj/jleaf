@@ -9,6 +9,7 @@ import org.jleaf.web.annotation.GlobalInterceptor;
 import org.jleaf.web.intercept.ActionInvocation;
 import org.jleaf.web.intercept.Interceptor;
 
+@SuppressWarnings("serial")
 @GlobalInterceptor(value = 2, clear = Clear.NOTCALEAR)
 public class BaseInitInterceptor implements Interceptor {
 

@@ -1,18 +1,88 @@
 jleaf
 ==================================
 	
-极速,简单,解耦的MVC框架
+极速,简单,解耦的MVC框架,继承MongoDB和JPA
 ---------------------------------
+### 第一个例子:
+
+	//定义Controller,访问地址为: user/index
+	@Control
+	public class UserController {
+	
+		public Result index(HttpAction action){
+			return new JspResult("index.jsp");
+		}
+		
+		public Result get(HttpAction action){
+			User user = userService.get(action.getParam("id"));
+			return new JsonResult(user);
+		}
+		
+	}
+	
+	//定义全局Interceptor
+	@GlobalInterceptor(1) //里面的数字表示拦截顺序
+	public class BaseInitInterceptor implements Interceptor {
+
+		//action执行前
+	    public boolean begin(ActionInvocation ai) {
+	        HttpServletRequest request = ActionContext.getRequest();
+	        return true;
+	    }
+	
+		//action执行完成后
+	    @Override
+	    public void end(ActionInvocation ai) {
+	        Result result = ai.getResult();//可以拿到结果
+	    }
+	
+	}
+	
+	
+### 注解:
+
+	@Control(value,method,isSingleton) //指定该普通java类为Controller,method访问方式,isSingleton是否单例
+	@Method(HttpMethod.POST) //指定该Controller下面的所有方法得post方式才能访问
+	@ClearInterceptor({BaseInitInterceptor.class})   //清除指定的全局Interceptor,如果不指定清除哪个,则默认是清除全部
+	@Interceptors({MsgInterceptor.class})	//指定该Controller的私有拦截器
+	public class UserController {
+	
+		@Method(HttpMethod.GET) //指定该方法得get方式才能访问,优先级比Controller上的高
+		@ClearInterceptor({MsgInterceptor.class}) //同上
+		@Interceptors({MyInterceptor.class})//同上
+		public Result index(HttpAction actionReq){
+			return JspResult("index.jsp");
+		}
+		
+	}
+	
+	//定义全局Interceptor
+	@GlobalInterceptor(value,clear) //标注为全局Interceptor,value表示拦截顺序,越小越优先,clear表示能否被@ClearInterceptors清除
+	public class BaseInitInterceptor implements Interceptor {//继承Interceptor
+
+		//action执行前
+	    public boolean begin(ActionInvocation ai) {//ai里包装了很多信息
+	        HttpServletRequest request = ActionContext.getRequest();
+	        return true;//返回是否继续执行下去,如果false,将会从当前Interceptor开始往前执行end方法
+	    }
+	
+		//action执行完成后
+	    @Override
+	    public void end(ActionInvocation ai) {
+	        Result result = ai.getResult();//可以拿到结果
+	    }
+	
+	}
 	
 ### Controller
 	
-> 采用注解式@Controller方式标示Controller,Controller是一个普通的java类,无需继承什么,启动服务器时能自动扫描到
+> 采用注解@Control方式标示Controller,Controller是一个普通的java类,无需继承什么,启动服务器时能自动扫描到
 	
-> @Controller有两个参数,都不写时默认按类名首字母小写,同时去掉后面的"Controller"或"Action"为Controller的uri,同时
+> @Control有两个参数,都不写时默认按类名首字母小写,同时去掉后面的"Controller"或"Action","Control"为Controller的uri,同时
     
-> 可以任何请求方式访问
+> 可以指定任何请求方式访问
     
-> 两个参数分别是@Controller(value, method)
+> 两个参数分别是@Control(value, method)
     
 > value代表Controller的uri, method代表请求的方式,未枚举类:HttpMethod,可以是GET,POST,PUT,DELETE,HEAD,OPTIONS,NONE;
     
@@ -20,41 +90,16 @@ jleaf
     
 > 同时也可指定Controller里的某方法的访问方式, 采用 @Method(HttpMethod.GET) 标签
 	
-	@Controller("user")
-	public class UserController {
-		
-		@Method(HttpMethod.GET)
-		public Result index(ActionRequest actionReq){
-			return JspResult("index.jsp");
-		}
-		
-		@Method(HttpMethod.NONE)
-		public Result index(ActionRequest actionReq){
-		
-			Map map = new HashMap();
-			map.put("a", "1");
-			map.put("b", 2);
-			map.put("c", new Date());
-			
-			//JspResult会将传递进去的对象存放在Request的Attribute中,名字统一命名为"obj",在页面可以使用EL表达式拿到 ${obj.a}
-			return JspResult("index.jsp",map);
-		}
-	}
-	
-### 对javaee的request,session解耦,采用Map方式:
+### 入参 HttpAction
     
-> ActionRequest.getParams();//获得Http请求前端传递过来的参数
+> HttpAction.getParams();//获得Http请求前端传递过来的参数
     
-> ActionRequest.getSession();//获得session(对此map的操作会同步到对应的session中去)
+> HttpAction.getSession();//获得session(对此map的操作会同步到对应的session中去)
     
-> ActionRequest.toObj(?);//方便将请求参数装为对象
-	
-### 对请求的解析方便获得:
-    
-> AnalyzeResult analyzeResult = ActionRequest.getAnalyzeResult();
-    
-> analyzeResult可得到请求的Controller的uri,以及method和访问后缀,前端请求方式(post,get,put,delete等)
-	
+> HttpAction.toObj(?);//方便将请求参数装为对象
+	 
+> HttpAction.getAnalyzeResult();//拿到Action的解析结果,可得到请求的uri以及HttpMethod和访问后缀
+
 > 举个使用访问后缀的实例:
 	
 > 在请求的地址上加上后缀 .json,让后台访问json数据, .xml则返回xml数据,其他则跳网页
@@ -63,7 +108,7 @@ jleaf
 	
 > 后台Java代码:
     
-	public Result data(ActionRequest actionReq){
+	public Result data(HttpAction actionReq){
 		
 		Stri ng postfix = actionReq.getAnalyzeResult().getPostfix();
 		
@@ -76,11 +121,11 @@ jleaf
 		}
 	}
 	
-### 多种Result,同时方便扩展:
+> 对于Controller里方法的返回类型为Result接口类型:
 	    
 > JspResult 返回jsp页面,
     
-> ForwardResult 后台forward,
+> ForwardResult 后台forward,可以跳转到jsp或者Controller
     
 > IOResult 返回文件或者IO流,
     
@@ -101,124 +146,74 @@ jleaf
 > 便能可很方便的扩展其他返回类型,例如VelocityResult,FreemarkerResult,ExcelResult之类的东西
     
 	
-### Intercepter
+### Intercepter 拦截器
 	
-> 分为全局Intercepter,类级别Intercepter,方法级别Intercepter
+> 拦截器分为全局,类级别,方法级别三种,同时皆需实现Interceptor接口
 	
-> 用户自定义的Interceptor皆需继承Interceptor,实现intercept方法,例如:
-		
+	@GlobalInterceptor//标上该注解后,将被扫描到,同时作为全局拦截器,拦截所有的用户请求
     public class BaseInitInterceptor implements Interceptor {
+		//action执行前
+	    public boolean begin(ActionInvocation ai) {//ai里包装了很多信息
+	        HttpServletRequest request = ActionContext.getRequest();
+	        return true;
+	    }
 	
-		public boolean intercept(ActionInvocation ai) {
-			
-			HttpServletRequest request = WebUtils.getRequest();
-			if(request != null){
-				String basePath = request.getScheme() + "://" + request.getServerName()
-						+ ":" + request.getServerPort() + request.getContextPath()
-						+ "/";
-				request.setAttribute("base", basePath);
-			}
-			return ai.invoke();
-		}
-	
+		//action执行完成后
+	    @Override
+	    public void end(ActionInvocation ai) {
+	        Result result = ai.getResult();//可以拿到结果
+	    }
 	}
 	
-> 当intercept方法返回false之后,将不会执行接下去的Interceptor
-	
-> @GlobalInterceptor标识在Interceptor上,将会被扫描到并作为全局Interceptor,拦截所有Controller的请求.
-	
-	类级别级别的Interceptor:
-	@Controller
-	@Interceptors(ClassInterceptor.class)//添加类级别的Interceptor
+
+	//类级别级别的Interceptor:
+	@Control
+	@Interceptors(ClassInterceptor.class)//添加类级别的拦截器,该Controller下所有方法执行前都会触发类级别的拦截器
 	public class UserController {
 		
-		@Interceptors(MethodInterceptor.class)//添加方法级别的Interceptor
-		public Result index(ActionRequest ar) {
-			log.debug(":index");
+		@Interceptors(MethodInterceptor.class)//添加方法级别的拦截器,同类级别的过滤器是同样道理
+		public Result index(HttpAction action) {
 			return new JspResult("/index.jsp");
 		}
-	
 	}
 	
-> 如果想不使用上一层的Intercepter,可采用@ClearInterceptor,负责清空上一层次的Intercepter,比如:
+> 如果想不使用上一层的拦截器,可采用@ClearInterceptor,负责清空上一层次的Intercepter,比如:
 	
-	@Controller
+	@Control
 	@ClearInterceptor
-	@Interceptors(ClassInterceptor.class)//添加类级别的Interceptor
+	@Interceptors(ClassInterceptor.class)
 	public class UserController {
     
 	}
 	
-> 这样会清除掉通过@GlobalInterceptor添加的全局Intercepter.
+> 但如果GlobalInterceptor的clear为NOTCLEAR的则不会清除
 	
-> 如果在方法上添加:
-    
-	@ClearInterceptor
-	@Interceptors(MethodInterceptor.class)//添加方法级别的Interceptor
-	public Result index(ActionRequest ar) {
-		log.debug(":index");
-		Map map = new HashMap();
-		map.put("a", "1");
-		map.put("b", 2);
-		map.put("c", new Date());
-		return new JspResult("/index.jsp", map);
+	
+### Junit测试,无需依赖第三方jar包:
+	
+	//只需继承JleafJunit
+	public class UserControllerTest extends JleafJunit {
+	
+	    @BeforeClass
+	    public static void beforeClass() {
+	        JleafJunit.setPath("F:/Java/project/jleaf/jleaf/src/demo/webapp");//设置的web目录
+	        
+	        //设置启动配置(可不设置,但有时想关闭扫描功能或者改变扫描的包路径,可以通过这个设置)
+	        Map<String, String> config = new HashMap<String, String>();
+	        config.put("package", "org.demo.*");
+	        setBootConfig(config);
+	    }
+	
+	    @Test
+	    public void testJson() throws Exception {
+	        Result result = this.action("user/json", HttpMethod.GET);
+	        Assert.assertNotNull(result);
+	    }
+	
+	    @Test
+	    public void testIndex() throws Exception {
+	        Result result = this.action("user/index", HttpMethod.GET);
+	        Assert.assertNotNull(result);
+	    }
+	
 	}
-	
-> 这样会清除掉@GlobalInterceptor添加的全局Intercepter和类级别添加的Interceptor
-	
-### 方便Junit测试,无需依赖第三方jar包:
-	
-	static{
-		JleafMVC.getInstance().getControllerManager().add(UserController.class);//添加Controller
-		
-		JleafMVC.getInstance().getControllerManager().addInterceptor(BaseInitInterceptor.class);//添加全局Interceptor
-	}
-	
-	@Test
-	public void test() {
-		
-		Map params = new HashMap();//作为request的paramemter
-		Map session = new HashMap();//作为session
-		
-		AnalyzeResult analyzeResult = new AnalyzeResult("user", "login", "", HttpMethod.GET);
-		
-		ActionRequest actionRequest = new ActionRequest(analyzeResult, params, session);
-		
-		Result result = mvc.doAction(actionRequest);
-	}
-	
-	
-	@Test
-	public void test() {
-		
-		Map params = new HashMap();//作为request的paramemter
-		Map session = new HashMap();//作为session
-		
-		AnalyzeResult analyzeResult = new AnalyzeResult("user", "login", ".json", HttpMethod.GET);
-		
-		ActionRequest actionRequest = new ActionRequest(analyzeResult, params, session);
-		
-		Result result = mvc.doAction(actionRequest);
-	}
-	
-> 在不通过web服务器启动项目来测试时,是不会启用扫描功能的,所以需手动将Controller和全局Interceptor加进控管理器
-	
-> 如果想启用扫描器,则可以:
-	
-	static{
-		//JleafMVC.getInstance().getControllerManager().add(UserController.class);//添加Controller
-		
-		//JleafMVC.getInstance().getControllerManager().addInterceptor(BaseInitInterceptor.class);//添加全局Interceptor
-		
-		JleafMVC.scan(new String[]{"org.demo.controller.*","org.demo.interceptor.*"});//启用扫描器,参数为要扫描的地方,只支持 '*' 和 '?', '?'代表一个字符, '*' 代表所有
-	}
-
-> 对于maven的测试单元, test生成的class文件夹目录跟src生成的class目录不一致,且内存中使用的是test的目录地址,
-	
-> 所以进行JUnit测试时,需要自己手动把Controller和Interceptor添加进管理器中,不然,想启用扫描就得自己手动去配置地址:
-	
-	JleafMVC.getInstance().scan("F:/Java/project/jleaf/jleaf/src/main/webapp/WEB-INF/classes",new String[]{"org.demo.*"});
-	
-> 对于jar包的扫描也一样要定位jar的目录去:
-	
-	JleafMVC.getInstance().scan("F:/Java/project/jleaf/jleaf/src/main/webapp/WEB-INF/lib",new String[]{"org.demo.*"});

@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.demo.interceptor.BaseInitInterceptor;
+import org.demo.interceptor.MsgInterceptor;
 import org.demo.service.UserService;
 import org.demo.service.impl.UserServiceImpl;
 import org.jleaf.utils.VerifyImage;
@@ -16,6 +18,7 @@ import org.jleaf.web.action.HttpAction;
 import org.jleaf.web.annotation.ClearInterceptor;
 import org.jleaf.web.annotation.Control;
 import org.jleaf.web.annotation.HttpMethod;
+import org.jleaf.web.annotation.Interceptors;
 import org.jleaf.web.annotation.Method;
 import org.jleaf.web.controller.result.ForwardResult;
 import org.jleaf.web.controller.result.IOCallBack;
@@ -29,6 +32,8 @@ import org.jleaf.web.controller.result.StringResult;
 
 @Control
 @SuppressWarnings({"unchecked", "rawtypes"})
+@ClearInterceptor({BaseInitInterceptor.class})
+@Interceptors({MsgInterceptor.class})
 public class UserController {
 
     private Logger log = Logger.getLogger(this.getClass());

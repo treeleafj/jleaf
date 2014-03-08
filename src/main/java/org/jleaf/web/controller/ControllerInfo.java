@@ -52,11 +52,17 @@ public class ControllerInfo implements Info {
         }
     }
 
-
-    private String getSimpleControllerName(Class<?> controller) {
-        String name = ClassUtils.getSimpleBeanName(controller);
+    /**
+     * 获取Controller的uri名字
+     */
+    private String getSimpleControllerName(Class<?> controllerClass) {
+        String name = ClassUtils.getSimpleBeanName(controllerClass);
         if (name.endsWith("Controller")) {
             name = name.substring(0, name.lastIndexOf("Controller"));
+        }else if(name.endsWith("Control")){
+        	name = name.substring(0, name.lastIndexOf("Control"));
+        }else if(name.endsWith("Action")){
+        	name = name.substring(0, name.lastIndexOf("Action"));
         }
         return name;
     }
