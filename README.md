@@ -1,7 +1,7 @@
 jleaf
 ==================================
 	
-极速,简单,解耦的MVC框架,继承MongoDB和JPA
+极速,简单,解耦的MVC框架,集成MongoDB和JPA,支持restfull
 ---------------------------------
 ### 第一个例子:
 
@@ -217,3 +217,44 @@ jleaf
 	    }
 	
 	}
+
+### 对restfull的支持
+> 在src目录下建立jleaf.properties,在里面添加:
+> jleaf.defaultActionAnalyzeClass=org.jleaf.web.action.analyze.RestfulHttpActionAnalyze
+> 这样就把解析用户请求的解析实现类改Restful方式的,然后在Controller中的方法命名:
+	
+	public RestController{
+	
+	    public Result get(HttpAction action){
+	        return new StringResult("=>get:" + action.getParam("id"));
+	    }
+	
+	    public Result save(HttpAction action){
+	        return new StringResult("=>save");
+	    }
+	
+	    public Result update(HttpAction action){
+	        return new StringResult("=>update");
+	    }
+	
+	    public Result delete(HttpAction action){
+	        return new StringResult("=>delete");
+	    }
+	}
+	
+### 自动CRUD的实现
+> 参考demo里的MsgController实现
+
+	//继承CrudController自动实现增删改查
+	@Control
+	public class MsgController extends CrudController<Msg, MsgServiceImpl, MsgQuery> {
+	
+	}
+	
+## 数据源的切换(JPA和MongoDB):
+> 一样在jleaf.properties里加上:
+> jleaf.defaultDaoImpl=org.jleaf.db.dao.impl.MongoDBDaoImpl 或者是
+> jleaf.defaultDaoImpl=org.jleaf.db.dao.impl.JPADaoImpl
+	
+## 结语
+> 很多功能都在开发中,比如DB这块也只是粗略实现,spring等插件的继承,页面显示层打算采用的的Extjs和Touch还没扩展成自已的一套框架,这些都会在日后慢慢加上去
