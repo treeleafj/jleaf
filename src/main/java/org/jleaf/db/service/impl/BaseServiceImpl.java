@@ -2,8 +2,8 @@ package org.jleaf.db.service.impl;
 
 import java.util.List;
 
-import org.jleaf.db.DefaultConfig;
 import org.jleaf.db.dao.BaseDao;
+import org.jleaf.db.dao.DBConfig;
 import org.jleaf.db.service.BaseService;
 import org.jleaf.format.query.QueryObject;
 import org.jleaf.utils.ClassUtils;
@@ -20,20 +20,14 @@ public class BaseServiceImpl<Entity> implements BaseService<Entity> {
 
     protected Class<Entity> entityClass;
 
-    protected Class<? extends BaseDao> daoClass;
-
     protected BaseDao dao;
 
     @SuppressWarnings("rawtypes")
     public BaseServiceImpl() {
         Class[] genericss = ClassUtils.getGenerics(this.getClass());
         this.entityClass = genericss[0];
-        this.daoClass = DefaultConfig.getBaseDaoClass();
-        try {
-            this.dao = daoClass.newInstance();
-        } catch (Exception e) {
-            throw new Error(e);
-        }
+        
+        this.dao = DBConfig.getBaseDao();
     }
 
     public List<Entity> list(QueryObject qo) {

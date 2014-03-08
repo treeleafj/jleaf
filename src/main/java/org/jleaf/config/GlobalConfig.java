@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.jleaf.db.dao.BaseDao;
+import org.jleaf.db.dao.impl.MongoDBDaoImpl;
 import org.jleaf.utils.LogFactory;
 import org.jleaf.web.action.analyze.ActionAnalyze;
 
@@ -51,12 +53,16 @@ public class GlobalConfig implements Serializable {
     /**
      * @return 获取默认的Dao实现类
      */
-    public static String getDefaultDao() {
+    public static Class<? extends BaseDao> getDefaultDao() {
         String defaultDaoImpl = get(DEFAULT_DAO);
         if (StringUtils.isBlank(defaultDaoImpl)) {
-            return "org.jleaf.db.dao.impl.MongoDBDaoImpl";
+            return MongoDBDaoImpl.class;
         }
-        return defaultDaoImpl;
+        try {
+			return (Class<? extends BaseDao>) Class.forName(defaultDaoImpl);
+		} catch (ClassNotFoundException e) {
+			throw new Error(e);
+		}
     }
 
     /**
