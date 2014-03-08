@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+@SuppressWarnings("serial")
 public class JspResult extends Result {
 
     private String jsp;

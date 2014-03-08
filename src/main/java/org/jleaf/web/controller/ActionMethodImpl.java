@@ -20,6 +20,7 @@ import org.jleaf.web.utils.HttpMethodUtils;
  * leaf
  * 14-3-2 下午10:56.
  */
+@SuppressWarnings("serial")
 public class ActionMethodImpl implements ActionMethod {
 
     private final static Logger log = LogFactory.getLogger(ActionMethodImpl.class);

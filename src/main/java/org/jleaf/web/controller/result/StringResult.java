@@ -11,6 +11,7 @@ import org.jleaf.web.utils.HttpHeadUtils;
  * @author leaf
  * @date 2014-1-4 上午1:19:45
  */
+@SuppressWarnings("serial")
 public class StringResult extends Result {
 
     private String s;

@@ -3,6 +3,7 @@ package org.jleaf.web.controller.result;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@SuppressWarnings("serial")
 public class RedirectResult extends Result {
 
     private String url;

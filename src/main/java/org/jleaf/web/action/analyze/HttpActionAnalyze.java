@@ -9,6 +9,7 @@ import org.jleaf.web.annotation.HttpMethod;
  * @author leaf
  * @date 2014-1-2 下午9:27:00
  */
+@SuppressWarnings("serial")
 public class HttpActionAnalyze extends ActionAnalyze {
 
     public HttpActionAnalyze(AnalyzeParam analyzeParam) {

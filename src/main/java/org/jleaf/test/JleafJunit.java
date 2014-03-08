@@ -3,9 +3,7 @@ package org.jleaf.test;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.jleaf.config.BootConfig;
-import org.jleaf.utils.LogFactory;
 import org.jleaf.web.action.HttpActionImpl;
 import org.jleaf.web.action.analyze.AnalyzeResult;
 import org.jleaf.web.annotation.HttpMethod;
@@ -18,8 +16,6 @@ import org.junit.Before;
  * 14-3-7 下午11:22.
  */
 public class JleafJunit {
-
-    private static Logger log = LogFactory.getLogger(JleafJunit.class);
 
     private static MvcDispatcher dispatcher;
 

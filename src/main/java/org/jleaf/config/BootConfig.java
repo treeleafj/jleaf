@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
  * 启动参数配置
  * 14-3-1 下午3:04.
  */
+@SuppressWarnings("serial")
 public class BootConfig implements Serializable {
 
     public final static String SCAN = "scan";

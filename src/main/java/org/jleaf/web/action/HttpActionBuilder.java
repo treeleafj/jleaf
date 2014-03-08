@@ -2,8 +2,6 @@ package org.jleaf.web.action;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-import org.jleaf.utils.LogFactory;
 import org.jleaf.utils.SessionAdapterMap;
 import org.jleaf.web.action.analyze.ActionAnalyze;
 import org.jleaf.web.action.analyze.ActionAnalyzeFactory;
@@ -14,9 +12,8 @@ import org.jleaf.web.action.analyze.AnalyzeResult;
  * leaf
  * 14-3-1 下午4:29.
  */
+@SuppressWarnings("serial")
 public class HttpActionBuilder implements ActionBuilder {
-
-    private final static Logger log = LogFactory.getLogger(HttpActionBuilder.class);
 
     private HttpServletRequest request;
 

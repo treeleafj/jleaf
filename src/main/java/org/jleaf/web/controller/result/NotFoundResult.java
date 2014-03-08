@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
  * leaf
  * 14-3-1 下午7:17.
  */
+@SuppressWarnings("serial")
 public class NotFoundResult extends Result {
 
     @Override

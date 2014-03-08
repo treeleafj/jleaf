@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+@SuppressWarnings("serial")
 public class SessionAdapterMap implements Map<String, Object>, Serializable {
 
     private static final int NOT_DATA_LENGTH = -1;

@@ -9,6 +9,7 @@ import org.jleaf.web.annotation.HttpMethod;
  * leaf
  * 14-3-2 上午3:30.
  */
+@SuppressWarnings("serial")
 public class ControllerInfo implements Info {
 
     /**

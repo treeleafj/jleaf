@@ -14,6 +14,7 @@ import org.jleaf.web.core.MvcDispatcher;
 /**
  * 后台Forward方式跳转,会自动判断是跳转到静态资源还是动态Action
  */
+@SuppressWarnings("serial")
 public class ForwardResult extends Result {
 
     /**

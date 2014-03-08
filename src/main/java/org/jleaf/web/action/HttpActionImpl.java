@@ -9,6 +9,7 @@ import org.jleaf.web.action.analyze.AnalyzeResult;
  * leaf
  * 14-3-1 下午4:18.
  */
+@SuppressWarnings({ "unchecked", "serial" })
 public class HttpActionImpl implements HttpAction {
 
     private AnalyzeResult analyzeResult;
@@ -17,7 +18,7 @@ public class HttpActionImpl implements HttpAction {
 
     private Map<String, Object> session;
 
-    public HttpActionImpl(AnalyzeResult analyzeResult, Map<String, Object> session) {
+	public HttpActionImpl(AnalyzeResult analyzeResult, Map<String, Object> session) {
         this.analyzeResult = analyzeResult;
         this.params = analyzeResult.getParams();
         this.session = session;

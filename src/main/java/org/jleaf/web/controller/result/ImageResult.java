@@ -14,6 +14,7 @@ import org.jleaf.web.utils.HttpHeadUtils;
  * @author leaf
  * @date 2014-1-4 上午1:51:39
  */
+@SuppressWarnings("serial")
 public class ImageResult extends IOResult {
 
     public ImageResult(InputStream in) {

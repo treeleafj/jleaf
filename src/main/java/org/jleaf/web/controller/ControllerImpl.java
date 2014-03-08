@@ -16,6 +16,7 @@ import org.jleaf.web.utils.AnnoUtils;
  * leaf
  * 14-3-2 下午11:10.
  */
+@SuppressWarnings("serial")
 public class ControllerImpl implements Controller {
 
     private final static Logger log = LogFactory.getLogger(Controller.class);
@@ -49,7 +50,7 @@ public class ControllerImpl implements Controller {
      * @param classz             Controller的类型
      * @param globalInterceptors 全局拦截器
      */
-    public ControllerImpl(Class classz, List<Interceptor> globalInterceptors) throws IllegalAccessException, InstantiationException {
+    public ControllerImpl(Class<?> classz, List<Interceptor> globalInterceptors) throws IllegalAccessException, InstantiationException {
         this(classz.newInstance(), globalInterceptors);
     }
 

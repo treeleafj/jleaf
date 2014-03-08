@@ -9,9 +9,8 @@ import java.io.Serializable;
  * @author leaf
  * @date 2014-1-19 下午4:58:52
  */
+@SuppressWarnings("serial")
 public class ClassData implements Serializable {
-
-    static final private int MAGIC = 0xCAFEBABE;
 
     /**
      * 类名

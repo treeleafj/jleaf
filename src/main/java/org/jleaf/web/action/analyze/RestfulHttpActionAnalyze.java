@@ -11,6 +11,7 @@ import org.jleaf.web.annotation.HttpMethod;
  * leaf
  * 14-3-7 上午1:04.
  */
+@SuppressWarnings("serial")
 public class RestfulHttpActionAnalyze extends HttpActionAnalyze {
 
     public RestfulHttpActionAnalyze(AnalyzeParam analyzeParam) {

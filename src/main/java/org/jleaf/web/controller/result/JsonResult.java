@@ -12,6 +12,7 @@ import org.jleaf.web.utils.HttpHeadUtils;
  * @author leaf
  * @date 2014-1-3 下午6:13:15
  */
+@SuppressWarnings("serial")
 public class JsonResult extends Result {
 
     private Object obj;

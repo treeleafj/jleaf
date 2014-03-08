@@ -9,6 +9,7 @@ import org.jleaf.web.action.Action;
  * leaf
  * 14-3-1 下午6:32.
  */
+@SuppressWarnings("serial")
 public class ControllersImpl implements Controllers {
 
     private Map<String, Controller> controllerMap = new HashMap<String, Controller>();

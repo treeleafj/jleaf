@@ -9,6 +9,7 @@ import javax.servlet.ServletContext;
  * leaf
  * 14-3-1 下午11:32.
  */
+@SuppressWarnings("serial")
 public class WebApplicationInfo implements Serializable {
 
     public final static String SERVLET_CONTEXT_DISPATCHER_NAME = "jleaf_dispatcher";

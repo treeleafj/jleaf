@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author leaf
  * @date 2014-1-4 上午1:19:59
  */
+@SuppressWarnings("serial")
 public class IOResult extends Result {
 
     private InputStream in;

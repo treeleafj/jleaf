@@ -13,6 +13,7 @@ import org.jleaf.web.action.analyze.ActionAnalyze;
 /**
  * 全局基本配置类
  */
+@SuppressWarnings({"serial","unchecked"})
 public class GlobalConfig implements Serializable {
 
     private final static Logger log = LogFactory.getLogger(GlobalConfig.class);
@@ -84,7 +85,7 @@ public class GlobalConfig implements Serializable {
      * 获得默认的ActionAnalyze实现类
      * @return
      */
-    public static Class<? extends ActionAnalyze> getDefaultActionAnalyzeClass() {
+	public static Class<? extends ActionAnalyze> getDefaultActionAnalyzeClass() {
         String classz = get(DEFAULT_ACTION_ANALYZE_CLASS);
         try {
             if (StringUtils.isBlank(classz)) {

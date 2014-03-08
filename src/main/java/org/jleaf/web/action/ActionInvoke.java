@@ -6,6 +6,7 @@ import java.io.Serializable;
  * leaf
  * 14-3-1 下午5:07.
  */
+@SuppressWarnings("serial")
 public class ActionInvoke implements Serializable {
 
 

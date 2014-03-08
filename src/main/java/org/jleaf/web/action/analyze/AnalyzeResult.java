@@ -9,6 +9,7 @@ import org.jleaf.web.annotation.HttpMethod;
 /**
  * 解析结果
  */
+@SuppressWarnings({"serial","rawtypes"})
 public class AnalyzeResult implements Serializable {
 
     /**
@@ -29,7 +30,7 @@ public class AnalyzeResult implements Serializable {
     /**
      * 前端传过来的参数
      */
-    private Map params;
+	private Map params;
 
     public AnalyzeResult(String uri, String postfix,
                          HttpMethod httpMethod, Map params) {

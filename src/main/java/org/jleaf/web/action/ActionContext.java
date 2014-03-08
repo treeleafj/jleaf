@@ -13,6 +13,7 @@ import org.jleaf.web.action.analyze.AnalyzeResult;
  * leaf
  * 14-3-1 下午4:55.
  */
+@SuppressWarnings("serial")
 public abstract class ActionContext implements Serializable {
 
     public static HttpServletRequest getRequest() {

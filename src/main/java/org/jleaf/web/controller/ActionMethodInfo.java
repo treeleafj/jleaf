@@ -8,6 +8,7 @@ import org.jleaf.web.annotation.HttpMethod;
  * leaf
  * 14-3-5 上午12:59.
  */
+@SuppressWarnings("serial")
 public class ActionMethodInfo implements Info {
 
     private String name;

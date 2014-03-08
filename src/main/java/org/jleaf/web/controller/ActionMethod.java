@@ -1,8 +1,10 @@
 package org.jleaf.web.controller;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.jleaf.web.controller.result.Result;
+import org.jleaf.web.intercept.Interceptor;
 
 /**
  * leaf
@@ -12,8 +14,9 @@ public interface ActionMethod extends Serializable {
 
     Controller getController();
 
-
     ActionMethodInfo getInfo();
+    
+    List<Interceptor> getInterceptors();
 
     /*
      * 执行Controller中的ActionMethod

@@ -25,6 +25,7 @@ import org.jleaf.web.utils.AnnoUtils;
  * leaf
  * 14-3-1 下午4:12.
  */
+@SuppressWarnings("serial")
 public class HttpMvcDispatcher implements MvcDispatcher {
 
     private final static Logger log = LogFactory.getLogger(HttpMvcDispatcher.class);
@@ -79,8 +80,6 @@ public class HttpMvcDispatcher implements MvcDispatcher {
      * @param ps       要扫描控制器和拦截器的包路径,例如 {"com.demo.*","com.demo2.*"}
      */
     private void scan(String basePath, String[] ps) throws Exception {
-
-        final String[] packages = ps;
 
         List<ClassData> classDatas = AnnoUtils.searchClassDatasByPackage(basePath, ps);
 

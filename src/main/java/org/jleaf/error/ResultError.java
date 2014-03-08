@@ -4,6 +4,7 @@ package org.jleaf.error;
  * leaf
  * 14-3-1 下午6:44.
  */
+@SuppressWarnings("serial")
 public class ResultError extends Error {
 
     public ResultError() {

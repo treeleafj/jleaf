@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author leaf
  */
+@SuppressWarnings("serial")
 public abstract class Result implements Serializable {
 
     /**

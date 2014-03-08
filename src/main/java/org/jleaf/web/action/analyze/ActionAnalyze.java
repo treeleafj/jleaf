@@ -10,6 +10,7 @@ import org.jleaf.config.GlobalConfig;
  * @author leaf
  * @date 2014-1-2 下午9:25:38
  */
+@SuppressWarnings("serial")
 public abstract class ActionAnalyze implements Serializable {
 
     /**

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
 
+@SuppressWarnings("serial")
 public class HttpServletRequestInvoke implements Serializable {
 
     private static ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();

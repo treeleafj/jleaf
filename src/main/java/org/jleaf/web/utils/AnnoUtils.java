@@ -142,7 +142,8 @@ public class AnnoUtils {
      *
      * @param result ClassData集合
      */
-    public static List<Interceptor> getInterceptorsByClassDatas(List<ClassData> result) {
+    @SuppressWarnings("unchecked")
+	public static List<Interceptor> getInterceptorsByClassDatas(List<ClassData> result) {
         List<Class<? extends Interceptor>> interceptorClasses = new ArrayList<Class<? extends Interceptor>>();
         for (ClassData data : result) {
             try {

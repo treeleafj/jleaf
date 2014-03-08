@@ -18,6 +18,7 @@ import org.jleaf.utils.LogFactory;
  * leaf
  * 14-3-1 下午3:39.
  */
+@SuppressWarnings("unchecked")
 public class PropertiesUtils {
 
     private final static Logger log = LogFactory.getLogger(PropertiesUtils.class);
@@ -55,7 +56,7 @@ public class PropertiesUtils {
      *
      * @param in
      */
-    public static Map<String, String> load(InputStream in) {
+	public static Map<String, String> load(InputStream in) {
         if(in != null){
             Properties p = new Properties();
             try {

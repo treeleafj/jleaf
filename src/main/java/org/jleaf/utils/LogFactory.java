@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
  */
 public abstract class LogFactory {
 
-    public static Logger getLogger(Class classz) {
+    public static Logger getLogger(Class<?> classz) {
         return Logger.getLogger(classz);
     }
 

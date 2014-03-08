@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author leaf
  * @date 2014-1-12 下午11:59:54
  */
+@SuppressWarnings("serial")
 public class NullResult extends Result {
 
     @Override

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author leaf
  * @date 2014-1-7 上午1:02:11
  */
+@SuppressWarnings("serial")
 public class AnalyzeParam implements Serializable {
 
     /**

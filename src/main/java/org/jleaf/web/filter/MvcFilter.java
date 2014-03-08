@@ -34,6 +34,7 @@ import org.jleaf.web.core.MvcDispatcher;
  * leaf
  * 14-3-1 下午4:38.
  */
+@SuppressWarnings("serial")
 public class MvcFilter implements Filter, Serializable {
 
     private static final Logger log = LogFactory.getLogger(MvcFilter.class);
