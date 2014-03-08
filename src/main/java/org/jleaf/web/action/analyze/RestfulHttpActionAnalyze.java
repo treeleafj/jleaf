@@ -41,10 +41,25 @@ public class RestfulHttpActionAnalyze extends HttpActionAnalyze {
 
         switch (hm) {
             case GET:
-                int index = uri.lastIndexOf('/');
-                String id = uri.substring(index + 1);
-                uri = uri.substring(0,index) + "/get";
-                params.put("id",id);
+            	if(uri.endsWith("/edit")){//edit
+            		String temp = uri.substring(0,uri.lastIndexOf('/'));
+            		int index = temp.lastIndexOf('/');
+            		String id = temp.substring(index + 1);
+            		params.put("id",id);
+            		uri = temp.substring(0,index) + "/edit";
+            	}else if(uri.endsWith("/new")){//create
+            		int index = uri.lastIndexOf("/new");
+            		uri = uri.substring(0,index) + "/create";
+            	}else{//index或者get
+	                int index = uri.lastIndexOf('/');
+	                if(index > 0){
+		                String id = uri.substring(index + 1);
+		                uri = uri.substring(0,index) + "/get";
+		                params.put("id",id);
+	                }else{
+	                	uri += "/index";
+	                }
+            	}
                 break;
             case POST:
                 uri += "/update";
@@ -53,6 +68,14 @@ public class RestfulHttpActionAnalyze extends HttpActionAnalyze {
                 uri += "/save";
                 break;
             case DELETE:
+            	int index = uri.lastIndexOf('/'); 
+            	if(index > 0 && index +1 <= uri.length()){
+            		String id = uri.substring(index + 1);
+            		if(params.get("id") ==  null){
+            			params.put("id", id);
+            		}
+            		uri = uri.substring(0,index);
+            	}
                 uri += "/delete";
                 break;
         }
