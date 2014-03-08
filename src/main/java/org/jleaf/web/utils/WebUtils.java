@@ -1,4 +1,4 @@
-package org.jleaf.utils;
+package org.jleaf.web.utils;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -7,9 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.jleaf.config.GlobalConfig;
@@ -94,25 +91,4 @@ public abstract class WebUtils {
         }
         return config;
     }
-
-    public static HttpServletRequest getRequest() {
-        return HttpServletRequestInvoke.getRequest();
-    }
-
-    public static HttpServletResponse getResponse() {
-        return HttpServletResponseInvoke.getResponse();
-    }
-
-    public static ServletContext getServletContext() {
-        return getRequest().getServletContext();
-    }
-
-    public static HttpSession getSession() {
-        return getRequest().getSession();
-    }
-
-    public static HttpSession getSession(boolean create) {
-        return getRequest().getSession(create);
-    }
-
 }

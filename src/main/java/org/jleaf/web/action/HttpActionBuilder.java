@@ -2,11 +2,11 @@ package org.jleaf.web.action;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jleaf.utils.SessionAdapterMap;
 import org.jleaf.web.action.analyze.ActionAnalyze;
 import org.jleaf.web.action.analyze.ActionAnalyzeFactory;
 import org.jleaf.web.action.analyze.AnalyzeParam;
 import org.jleaf.web.action.analyze.AnalyzeResult;
+import org.jleaf.web.utils.SessionAdapterMap;
 
 /**
  * leaf

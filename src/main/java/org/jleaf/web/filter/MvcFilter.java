@@ -18,16 +18,17 @@ import org.jleaf.config.BootConfig;
 import org.jleaf.config.GlobalConfig;
 import org.jleaf.config.PropertiesUtils;
 import org.jleaf.config.WebApplicationInfo;
-import org.jleaf.utils.HttpServletRequestInvoke;
-import org.jleaf.utils.HttpServletResponseInvoke;
 import org.jleaf.utils.LogFactory;
-import org.jleaf.utils.WebUtils;
 import org.jleaf.web.action.Action;
 import org.jleaf.web.action.ActionBuilder;
 import org.jleaf.web.action.HttpActionBuilder;
 import org.jleaf.web.controller.result.Result;
 import org.jleaf.web.core.HttpMvcDispatcher;
 import org.jleaf.web.core.MvcDispatcher;
+import org.jleaf.web.utils.ActionInvoke;
+import org.jleaf.web.utils.HttpServletRequestInvoke;
+import org.jleaf.web.utils.HttpServletResponseInvoke;
+import org.jleaf.web.utils.WebUtils;
 
 /**
  * 主入口
@@ -76,11 +77,13 @@ public class MvcFilter implements Filter, Serializable {
             setReqAndResp(req, resp);
             ActionBuilder rb = new HttpActionBuilder(req);
             Action action = rb.build();
+            ActionInvoke.setAction(action);
             try {
                 Result result = dispatcher.execute(action);
                 dispatcher.render(result);
             } finally {
                 removeReqAndResp();
+                ActionInvoke.remove();
             }
             log.debug("[" + action.getAnalyzeResult() + "] time:" + (System.currentTimeMillis() - t) + "ms");
         } else {

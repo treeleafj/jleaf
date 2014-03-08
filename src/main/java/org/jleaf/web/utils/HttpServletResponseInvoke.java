@@ -1,4 +1,4 @@
-package org.jleaf.utils;
+package org.jleaf.web.utils;
 
 import java.io.Serializable;
 

@@ -3,8 +3,8 @@ package org.jleaf.web.action.analyze;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jleaf.utils.WebUtils;
 import org.jleaf.web.annotation.HttpMethod;
+import org.jleaf.web.utils.WebUtils;
 
 /**
  * Restful的解析器

@@ -1,7 +1,7 @@
 package org.jleaf.web.action.analyze;
 
-import org.jleaf.utils.WebUtils;
 import org.jleaf.web.annotation.HttpMethod;
+import org.jleaf.web.utils.WebUtils;
 
 /**
  * 简单实现Action请求解析
