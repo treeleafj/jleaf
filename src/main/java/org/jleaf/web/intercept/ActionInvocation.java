@@ -6,63 +6,85 @@ import org.jleaf.web.controller.result.Result;
 
 /**
  * 作为Interceptor的入参
- *
+ * 
  * @author leaf
  * @date 2014-1-26 下午2:44:38
  */
 public class ActionInvocation {
 
-    private ControllerInfo controllerInfo;
+	private ControllerInfo controllerInfo;
 
-    private Object controller;
+	private Object controller;
 
-    private Action action;
+	private Action action;
 
-    private Result result;
+	private Result result;
 
-    public ActionInvocation() {
-    }
+	private boolean isException = false;
 
-    public ActionInvocation(ControllerInfo controllerInfo, Action action) {
-        this.controllerInfo = controllerInfo;
-        this.action = action;
-    }
+	private Throwable throwable;
 
-    public ActionInvocation(ControllerInfo controllerInfo, Action action, Object controller) {
-        this.controllerInfo = controllerInfo;
-        this.action = action;
-        this.controller = controller;
-    }
+	public ActionInvocation() {
+	}
 
-    public ControllerInfo getControllerInfo() {
-        return controllerInfo;
-    }
+	public ActionInvocation(ControllerInfo controllerInfo, Action action) {
+		this.controllerInfo = controllerInfo;
+		this.action = action;
+	}
 
-    public void setControllerInfo(ControllerInfo controllerInfo) {
-        this.controllerInfo = controllerInfo;
-    }
+	public ActionInvocation(ControllerInfo controllerInfo, Action action,
+			Object controller) {
+		this.controllerInfo = controllerInfo;
+		this.action = action;
+		this.controller = controller;
+	}
 
-    public Object getController() {
-        return controller;
-    }
+	public ControllerInfo getControllerInfo() {
+		return controllerInfo;
+	}
 
-    public void setController(Object controller) {
-        this.controller = controller;
-    }
+	public void setControllerInfo(ControllerInfo controllerInfo) {
+		this.controllerInfo = controllerInfo;
+	}
 
-    public Action getAction() {
-        return action;
-    }
+	public Object getController() {
+		return controller;
+	}
 
-    public void setAction(Action action) {
-        this.action = action;
-    }
+	public void setController(Object controller) {
+		this.controller = controller;
+	}
 
-    public Result getResult() {
-        return result;
-    }
+	public Action getAction() {
+		return action;
+	}
 
-    public void setResult(Result result) {
-        this.result = result;
-    }
+	public void setAction(Action action) {
+		this.action = action;
+	}
+
+	public Result getResult() {
+		return result;
+	}
+
+	public void setResult(Result result) {
+		this.result = result;
+	}
+
+	public boolean isException() {
+		return isException;
+	}
+
+	public void setException(boolean isException) {
+		this.isException = isException;
+	}
+
+	public Throwable getThrowable() {
+		return throwable;
+	}
+
+	public void setThrowable(Throwable throwable) {
+		this.throwable = throwable;
+	}
+
 }

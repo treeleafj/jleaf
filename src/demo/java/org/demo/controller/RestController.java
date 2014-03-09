@@ -13,7 +13,8 @@ import org.jleaf.web.controller.result.StringResult;
 public class RestController {
 	
 	public Result index(HttpAction action){
-		return new StringResult("=>index");
+		throw new Error("不告诉你");
+//		return new StringResult("=>index");
 	}
 	
 	public Result edit(HttpAction action){

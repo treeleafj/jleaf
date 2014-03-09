@@ -8,6 +8,7 @@ import org.jleaf.utils.LogFactory;
 import org.jleaf.web.action.Action;
 import org.jleaf.web.action.analyze.AnalyzeResult;
 import org.jleaf.web.annotation.HttpMethod;
+import org.jleaf.web.controller.result.ErrorResult;
 import org.jleaf.web.controller.result.Result;
 import org.jleaf.web.controller.result.ResultUtils;
 import org.jleaf.web.intercept.ActionInvocation;
@@ -79,14 +80,20 @@ public class ActionMethodImpl implements ActionMethod {
                         this.info.getHttpMethod() + " method");
                 return ResultUtils.NOTFOUND_RESULT;
             }
-
-            result = (Result) info.getMethod().invoke(controller, params);
-
-            ai.setResult(result);
+            try{
+            	result = (Result) info.getMethod().invoke(controller, params);
+            	ai.setResult(result);
+            }catch(Exception e){
+            	ai.setException(true);
+            	Throwable t = e.getCause() != null ? e.getCause() : e;
+            	log.info("exception:",t);
+            	ai.setThrowable(t);
+            	ai.setResult(new ErrorResult(t));
+            }
 
             interceptorInvoker.invokeEnd();//执行所有全局Interceptor的end
 
-            return result;
+            return ai.getResult();
 
         } catch (Exception e) {
             throw new Error(e);
