@@ -162,6 +162,14 @@ jleaf
 	    @Override
 	    public void end(ActionInvocation ai) {
 	        Result result = ai.getResult();//可以拿到结果
+	        
+	        //对异常的拦截
+	        if(ai.isException()){
+    			Throwable t = ai.getThrowable();
+	    		Map<String, Object> map = new HashMap<String, Object>();
+	    		map.put("msg", t.toString());
+	    		ai.setResult(new JsonResult(map));//则将输出的结果由普通字符串转为json格式
+	    	}
 	    }
 	}
 	
@@ -223,20 +231,39 @@ jleaf
 > jleaf.defaultActionAnalyzeClass=org.jleaf.web.action.analyze.RestfulHttpActionAnalyze
 > 这样就把解析用户请求的解析实现类改Restful方式的,然后在Controller中的方法命名:
 	
-	public RestController{
+	public UserController{
+		
+		//http://localhost/user	(get)
+		public Result index(HttpAction action) {
+			return new StringResult("=>index");
+		}
+		
+		//http://localhost/user/1/edit	(get)
+		public Result edit(HttpAction action){
+			return new StringResult("=>edit");
+		}
+		
+		//http://localhost/user/new	(get)
+		public Result create(HttpAction action){
+			return new StringResult("=>create");
+		}
 	
+		//http://localhost/user/1	(get)
 	    public Result get(HttpAction action){
 	        return new StringResult("=>get:" + action.getParam("id"));
 	    }
 	
+		//http://localhost/user/1	(put)
 	    public Result save(HttpAction action){
 	        return new StringResult("=>save");
 	    }
 	
+		//http://localhost/user  (post)
 	    public Result update(HttpAction action){
 	        return new StringResult("=>update");
 	    }
 	
+		//http://localhost/user/1 (delete)
 	    public Result delete(HttpAction action){
 	        return new StringResult("=>delete");
 	    }
@@ -257,4 +284,4 @@ jleaf
 > jleaf.defaultDaoImpl=org.jleaf.db.dao.impl.JPADaoImpl
 	
 ## 结语
-> 很多功能都在开发中,比如DB这块也只是粗略实现,spring等插件的继承,页面显示层打算采用的的Extjs和Touch还没扩展成自已的一套框架,这些都会在日后慢慢加上去
+> 很多功能都在开发中,比如DB这块也只是粗略实现,spring等插件的集成,页面显示层打算采用的的Extjs和Touch还没扩展成自已的一套框架,这些都会在日后慢慢加上去

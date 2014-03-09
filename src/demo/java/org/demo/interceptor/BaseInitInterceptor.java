@@ -21,7 +21,7 @@ public class BaseInitInterceptor implements Interceptor {
 
     @Override
     public boolean begin(ActionInvocation ai) {
-        log.warn("=>BaseInitInterceptor.");
+        log.debug("=>BaseInitInterceptor.");
 
         HttpServletRequest request = ActionContext.getRequest();
         if (request != null) {
