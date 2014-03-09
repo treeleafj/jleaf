@@ -38,7 +38,6 @@ jleaf
 	
 	}
 	
-	
 ### 注解:
 
 	@Control(value,method,isSingleton) //指定该普通java类为Controller,method访问方式,isSingleton是否单例
@@ -277,6 +276,8 @@ jleaf
 	public class MsgController extends CrudController<Msg, MsgServiceImpl, MsgQuery> {
 	
 	}
+	
+	//如果是restfull方式的,则可以将CrudController换为RestCrudController
 	
 ## 数据源的切换(JPA和MongoDB):
 > 一样在jleaf.properties里加上:
