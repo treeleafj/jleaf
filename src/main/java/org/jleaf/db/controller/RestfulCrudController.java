@@ -8,7 +8,7 @@ import org.jleaf.web.action.HttpAction;
 import org.jleaf.web.controller.result.Result;
 
 @SuppressWarnings({ "rawtypes", "unchecked", "serial" })
-public class RestCrudController<Entity, Service extends BaseService<Entity>, QueryObj extends QueryObject>
+public class RestfulCrudController<Entity, Service extends BaseService<Entity>, QueryObj extends QueryObject>
 		extends BaseController {
 
 	private Class<Entity> entityClass;
@@ -23,7 +23,7 @@ public class RestCrudController<Entity, Service extends BaseService<Entity>, Que
 	
 	private String simpleBeanName;
 
-	public RestCrudController() {
+	public RestfulCrudController() {
 
 		Class[] classzs = ClassUtils.getGenerics(this.getClass());
 

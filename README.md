@@ -277,7 +277,7 @@ jleaf
 	
 	}
 	
-	//如果是restfull方式的,则可以将CrudController换为RestCrudController
+	//如果是restfull方式的,则可以将CrudController换为RestfullCrudController
 	
 ## 数据源的切换(JPA和MongoDB):
 > 一样在jleaf.properties里加上:
