@@ -1,5 +1,6 @@
 package org.jleaf.db.service;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.jleaf.format.query.QueryObject;
@@ -12,7 +13,7 @@ public interface BaseService<T> {
      * @param id
      * @return
      */
-    T get(Long id);
+    T get(Serializable id);
 
     /**
      * 根据条件查询
@@ -35,13 +36,13 @@ public interface BaseService<T> {
      * @param id
      * @param obj
      */
-    void update(Long id, T obj);
+    void update(Serializable id, T obj);
 
     /**
      * 删除
      *
      * @param id
      */
-    void remove(Long id);
+    void remove(Serializable id);
 
 }

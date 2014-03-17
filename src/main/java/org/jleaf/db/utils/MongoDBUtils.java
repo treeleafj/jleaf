@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -108,7 +109,7 @@ public class MongoDBUtils {
     public static DBObject get(Object id, String collectionName) {
         DBCollection collection = MongoDBUtils.getDB().getCollection(collectionName);
         DBObject queryObj = new BasicDBObject();
-        queryObj.put("id", id);
+        queryObj.put("id", id.toString());
         return collection.findOne(queryObj);
     }
 

@@ -72,8 +72,9 @@ public class MvcFilter implements Filter, Serializable {
         long t = System.currentTimeMillis();
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
+        
         //如果不是静态资源,则进Dispathcer
-        if (!WebUtils.isStaticResource(req.getRequestURI())) {
+        if (!WebUtils.isStaticResource(req.getServletPath())) {
             setReqAndResp(req, resp);
             ActionBuilder rb = new HttpActionBuilder(req);
             Action action = rb.build();

@@ -20,7 +20,7 @@ public class HttpActionAnalyze extends ActionAnalyze {
     public AnalyzeResult analyze() {
 
         HttpMethod hm = WebUtils.analyzeHttpMehotd(getAnalyzeParam().getHttpMethod());
-        String postfix;
+        String postfix = DEFAULTPostfix;
         String uri = getAnalyzeParam().getUri();
         // 先去掉开头的 '/'
         if (uri.charAt(0) == '/') {
@@ -32,10 +32,8 @@ public class HttpActionAnalyze extends ActionAnalyze {
         if (dotIndex >= 0) {
             postfix = uri.substring(dotIndex + 1);
             uri = uri.substring(0, dotIndex);
-        }else{
-            postfix = DEFAULTPostfix;
         }
-
+        
         return new AnalyzeResult(uri, postfix, hm, getAnalyzeParam().getRequest().getParameterMap());
     }
 

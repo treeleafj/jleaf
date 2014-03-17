@@ -1,5 +1,8 @@
 package org.jleaf.db.controller;
 
+import java.io.Serializable;
+
+import org.apache.commons.beanutils.PropertyUtils;
 import org.jleaf.db.service.BaseService;
 import org.jleaf.format.json.JsonData;
 import org.jleaf.format.query.QueryObject;
@@ -46,10 +49,12 @@ public class RestfulCrudController<Entity, Service extends BaseService<Entity>, 
 		return json(getService().list(qo));
 	}
 	
-	public Result edit(HttpAction action){
-		String id = action.getParam("id");
+	public Result edit(HttpAction action) throws Exception{
+		
+		Entity temp = action.toObj(this.entityClass);
+		Object id = PropertyUtils.getSimpleProperty(temp, "id");
 		if(id != null){
-			Entity entity = getService().get(Long.valueOf(id));
+			Entity entity = getService().get((Serializable) id);
 			if(entity != null){
 				return jsp(this.simpleBeanName + "/edit.jsp",entity);
 			}
@@ -61,10 +66,11 @@ public class RestfulCrudController<Entity, Service extends BaseService<Entity>, 
 		return jsp(this.simpleBeanName + "/create.jsp");
 	}
 	
-	public Result get(HttpAction action) {
-		String id = action.getParam("id");
+	public Result get(HttpAction action) throws Exception{
+		Entity temp = action.toObj(this.entityClass);
+		Object id = PropertyUtils.getSimpleProperty(temp, "id");
 		if(id != null){
-			return json(getService().get(Long.valueOf(id)));
+			return json(getService().get((Serializable) id));
 		}
 		return notFound();
 	}
@@ -75,20 +81,22 @@ public class RestfulCrudController<Entity, Service extends BaseService<Entity>, 
 		return json(obj);
 	}
 
-	public Result delete(HttpAction action) {
-		String id = action.getParam("id");
+	public Result delete(HttpAction action) throws Exception{
+		Entity temp = action.toObj(this.entityClass);
+		Object id = PropertyUtils.getSimpleProperty(temp, "id");
 		if(id != null){
-			getService().remove(Long.valueOf(id));
+			getService().remove((Serializable) id);
 			return json(new JsonData(true, "removed"));
 		}
 		return notFound();
 	}
 
-	public Result update(HttpAction action) {
-		String id = action.getParam("id");
+	public Result update(HttpAction action) throws Exception{
+		Entity temp = action.toObj(this.entityClass);
+		Object id = PropertyUtils.getSimpleProperty(temp, "id");
 		if(id != null){
 			Entity obj = action.toObj(entityClass);
-			getService().update(Long.valueOf(id), obj);
+			getService().update((Serializable) id, obj);
 			return json(obj);
 		}
 		return notFound();
@@ -113,5 +121,4 @@ public class RestfulCrudController<Entity, Service extends BaseService<Entity>, 
 	public QueryObject getQueryObj() {
 		return queryObj;
 	}
-
 }

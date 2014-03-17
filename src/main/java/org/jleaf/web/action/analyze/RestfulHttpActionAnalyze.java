@@ -13,6 +13,8 @@ import org.jleaf.web.utils.WebUtils;
  */
 @SuppressWarnings("serial")
 public class RestfulHttpActionAnalyze extends HttpActionAnalyze {
+	
+	private final static String METHOD_NAME = "_method";
 
     public RestfulHttpActionAnalyze(AnalyzeParam analyzeParam) {
         super(analyzeParam);
@@ -20,7 +22,13 @@ public class RestfulHttpActionAnalyze extends HttpActionAnalyze {
 
     @Override
     public AnalyzeResult analyze() {
-        HttpMethod hm = WebUtils.analyzeHttpMehotd(this.getAnalyzeParam().getHttpMethod());
+    	String _method = getAnalyzeParam().getRequest().getParameter(METHOD_NAME);
+    	HttpMethod hm;
+    	if(_method != null){
+    		hm = WebUtils.analyzeHttpMehotd(_method);
+    	}else{
+    		hm = WebUtils.analyzeHttpMehotd(getAnalyzeParam().getHttpMethod());
+    	}
 
         String uri = this.getAnalyzeParam().getUri();
         String postfix = DEFAULTPostfix;
@@ -29,7 +37,6 @@ public class RestfulHttpActionAnalyze extends HttpActionAnalyze {
         if (uri.charAt(0) == '/') {
             uri = uri.substring(1);
         }
-
         //截取最后的.***后缀
         int dotIndex = uri.lastIndexOf(".");
         if (dotIndex >= 0) {

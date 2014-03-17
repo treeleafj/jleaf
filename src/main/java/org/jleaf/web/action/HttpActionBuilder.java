@@ -29,7 +29,7 @@ public class HttpActionBuilder implements ActionBuilder {
 
     public HttpActionBuilder(HttpServletRequest request) {
         this.request = request;
-        this.uri = request.getRequestURI();
+        this.uri = request.getServletPath();
         this.httpMethod = request.getMethod();
     }
 

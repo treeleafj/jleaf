@@ -129,7 +129,9 @@ public class AnnoUtils {
         for (ClassData data : result) {
             try {
                 Class<?> classz = (Class<?>) Class.forName(data.getClassName());
-                list.add(classz);
+                if(classz.getAnnotation(Control.class) != null){
+                	list.add(classz);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

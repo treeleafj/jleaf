@@ -1,5 +1,6 @@
 package org.jleaf.db.service.impl;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.jleaf.db.dao.BaseDao;
@@ -39,15 +40,15 @@ public class BaseServiceImpl<Entity> implements BaseService<Entity> {
         dao.save(obj);
     }
 
-    public Entity get(Long id) {
+    public Entity get(Serializable id) {
         return dao.get(entityClass, id);
     }
 
-    public void update(Long id, Entity obj) {
+    public void update(Serializable id, Entity obj) {
         dao.update(id, obj);
     }
 
-    public void remove(Long id) {
+    public void remove(Serializable id) {
         dao.remove(entityClass, id);
     }
 

@@ -30,7 +30,8 @@ public class MongoDBDaoImpl implements BaseDao {
 
     Transform transform = new MongoDBTransform();
 
-    private static Logger log = Logger.getLogger(MongoDBDaoImpl.class);
+    @SuppressWarnings("unused")
+	private static Logger log = Logger.getLogger(MongoDBDaoImpl.class);
 
     public <T> T get(Class<T> classz, Serializable id) {
         DBObject dbObj = MongoDBUtils.get(id, classz.getSimpleName());
@@ -81,17 +82,23 @@ public class MongoDBDaoImpl implements BaseDao {
         if (qo.getOrderBy() != null) {
             order = new BasicDBObject(qo.getOrderBy(), qo.getOrder() > 0 ? -1 : 1);
         }
-        DBCursor cursor = MongoDBUtils.find(params, qo.getStart(), qo.getLimit(), order, classz.getSimpleName());
-
-        while (cursor.hasNext()) {
-            DBObject dbObj = cursor.next();
-            try {
-                Object obj = classz.newInstance();
-                BeanUtils.populate(obj, dbObj.toMap());
-                list.add(obj);
-            } catch (Exception e) {
-                throw new Error(e);
-            }
+        DBCursor cursor = null;
+        try{
+	        cursor = MongoDBUtils.find(params, qo.getStart(), qo.getLimit(), order, classz.getSimpleName());
+	        while (cursor.hasNext()) {
+	            DBObject dbObj = cursor.next();
+	            try {
+	                Object obj = classz.newInstance();
+	                BeanUtils.populate(obj, dbObj.toMap());
+	                list.add(obj);
+	            } catch (Exception e) {
+	                throw new Error(e);
+	            }
+	        }
+        }finally{
+        	if(cursor != null){
+        		cursor.close();
+        	}
         }
         return list;
     }
@@ -100,11 +107,14 @@ public class MongoDBDaoImpl implements BaseDao {
         return null;
     }
 
-    public void update(Serializable id, Object obj) {
+    @SuppressWarnings("rawtypes")
+	public void update(Serializable id, Object obj) {
         Object entity = get(obj.getClass(), id);
         if (entity != null) {
             try {
-                DBObject dbObj = new BasicDBObject(PropertyUtils.describe(obj));
+            	Map map = PropertyUtils.describe(obj);
+            	map.remove("class");
+                DBObject dbObj = new BasicDBObject(map);
                 DBObject query = new BasicDBObject();
                 query.put("id", id);
                 MongoDBUtils.update(query, dbObj, obj.getClass().getSimpleName());
@@ -115,7 +125,6 @@ public class MongoDBDaoImpl implements BaseDao {
     }
 
     public void remove(Class<?> classz, Serializable id) {
-        log.debug("删除" + classz + ",id=" + id);
         DBObject queryObj = new BasicDBObject();
         queryObj.put("id", id);
         MongoDBUtils.remove(queryObj, classz.getSimpleName());
@@ -124,14 +133,13 @@ public class MongoDBDaoImpl implements BaseDao {
     @SuppressWarnings("unchecked")
     public void save(Object obj) {
         try {
+        	PropertyUtils.setSimpleProperty(obj, "id", new ObjectId().toString());
             Map<String, Object> map = PropertyUtils.describe(obj);
             map.remove("class");
             DBObject dbObj = new BasicDBObject(map);
-            dbObj.put("id", new ObjectId());
             MongoDBUtils.insert(dbObj, obj.getClass().getSimpleName());
         } catch (Exception e) {
             throw new Error(e);
         }
     }
-
 }
