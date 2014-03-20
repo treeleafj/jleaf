@@ -38,7 +38,7 @@ public class HttpActionBuilder implements ActionBuilder {
         AnalyzeParam analyzeParam = new AnalyzeParam(uri, httpMethod, request);
         ActionAnalyze analyze = ActionAnalyzeFactory.create(analyzeParam);
         AnalyzeResult analyzeResult = analyze.analyze();// 解析用户请求
-        HttpAction wr = new HttpActionImpl(analyzeResult, new SessionAdapterMap(request.getSession()));
+        HttpAction wr = new HttpActionImpl(analyzeResult, new SessionAdapterMap(request));
         return wr;
     }
 }

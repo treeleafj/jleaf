@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
-import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -57,7 +56,6 @@ public class MongoDBUtils {
 
                 mongo = new MongoClient(serverAddrs);
                 db = mongo.getDB(dbname);
-
                 if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
                     boolean b = db.authenticate(username, password.toCharArray());
                     if (!b) {
@@ -80,11 +78,16 @@ public class MongoDBUtils {
 
     public static DB getDB(String dbname) {
         if (mongo == null) {
-            try {
-                init();
-            } catch (IOException e) {
-                throw new Error(e);
-            }
+        	//做同步处理
+        	synchronized (MongoDBUtils.class) {
+        		if(mongo == null){
+	        		try {
+	        			init();
+	        		} catch (IOException e) {
+	        			throw new Error(e);
+	        		}
+        		}
+			}
         }
         return mongo.getDB(dbname);
     }

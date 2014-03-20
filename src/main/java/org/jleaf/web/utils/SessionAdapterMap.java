@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @SuppressWarnings("serial")
@@ -14,18 +15,18 @@ public class SessionAdapterMap implements Map<String, Object>, Serializable {
 
     private static final int NOT_DATA_LENGTH = -1;
 
-    private HttpSession session;
+    private HttpServletRequest request;
 
     private int size = NOT_DATA_LENGTH;
 
     private Map<String, Object> sessionMap = new HashMap<String, Object>();
 
-    public SessionAdapterMap(HttpSession session) {
-        this.session = session;
+    public SessionAdapterMap(HttpServletRequest request) {
+        this.request = request;
     }
 
     private void initSessionMap() {
-        sessionMap.clear();
+    	HttpSession session = getSession();
         Enumeration<String> names = session.getAttributeNames();
         while (names.hasMoreElements()) {
             String name = names.nextElement();
@@ -46,7 +47,7 @@ public class SessionAdapterMap implements Map<String, Object>, Serializable {
     }
 
     public boolean containsKey(Object key) {
-        return session.getAttribute(key.toString()) != null;
+        return getSession().getAttribute(key.toString()) != null;
     }
 
     public boolean containsValue(Object value) {
@@ -58,19 +59,19 @@ public class SessionAdapterMap implements Map<String, Object>, Serializable {
     }
 
     public Object get(Object key) {
-        return session.getAttribute(key.toString());
+        return getSession().getAttribute(key.toString());
     }
 
     public Object put(String key, Object value) {
         sessionMap.put(key, value);
-        session.setAttribute(key, value);
+        getSession().setAttribute(key, value);
         return value;
     }
 
     public Object remove(Object key) {
         sessionMap.remove(key);
-        Object obj = session.getAttribute(key.toString());
-        session.removeAttribute(key.toString());
+        Object obj = getSession().getAttribute(key.toString());
+        getSession().removeAttribute(key.toString());
         return obj;
     }
 
@@ -82,10 +83,10 @@ public class SessionAdapterMap implements Map<String, Object>, Serializable {
 
     public void clear() {
         sessionMap.clear();
-        Enumeration<String> names = session.getAttributeNames();
+        Enumeration<String> names = getSession().getAttributeNames();
         while (names.hasMoreElements()) {
             String name = names.nextElement();
-            session.removeAttribute(name);
+            getSession().removeAttribute(name);
         }
     }
 
@@ -115,6 +116,10 @@ public class SessionAdapterMap implements Map<String, Object>, Serializable {
             initSessionMap();
         }
         return sessionMap.toString();
+    }
+    
+    private HttpSession getSession(){
+    	return request.getSession();
     }
 
 }

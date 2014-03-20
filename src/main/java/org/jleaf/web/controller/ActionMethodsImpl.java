@@ -1,11 +1,11 @@
 package org.jleaf.web.controller;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jleaf.utils.BeanInfoUtils;
 import org.jleaf.web.action.Action;
 import org.jleaf.web.annotation.ClearInterceptor;
 import org.jleaf.web.controller.result.Result;
@@ -55,17 +55,17 @@ public class ActionMethodsImpl implements ActionMethods {
 
 	/**
 	 * 判断一个方法是否可以作为Action方法
-	 * 
+	 * 必须入参只有1个且是Action或其子类, 然后必须是public的非static方法
 	 * @param m
 	 *            要判断的方法
 	 * @return 是否可以
 	 */
 	protected boolean isActionMethod(Method m) {
-		return m.getParameterTypes().length == 1
+		return BeanInfoUtils.getParamLength(m) == 1
 				&& Action.class.isAssignableFrom(m.getParameterTypes()[0])
 				&& Result.class.isAssignableFrom(m.getReturnType())
-				&& (m.getModifiers() & Modifier.STATIC) == 0
-				&& (m.getModifiers() & Modifier.PUBLIC) != 0;
+				&& !BeanInfoUtils.isStatic(m)
+				&& BeanInfoUtils.isPublic(m);
 	}
 
 	public List<Interceptor> getInterceptors() {

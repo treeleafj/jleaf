@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
@@ -15,6 +14,7 @@ import org.jleaf.db.utils.MongoDBUtils;
 import org.jleaf.format.query.Condition;
 import org.jleaf.format.query.Operator;
 import org.jleaf.format.query.QueryObject;
+import org.jleaf.utils.FastBeanUtils;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
@@ -33,12 +33,13 @@ public class MongoDBDaoImpl implements BaseDao {
     @SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(MongoDBDaoImpl.class);
 
-    public <T> T get(Class<T> classz, Serializable id) {
+    @SuppressWarnings("unchecked")
+	public <T> T get(Class<T> classz, Serializable id) {
         DBObject dbObj = MongoDBUtils.get(id, classz.getSimpleName());
         if (dbObj != null) {
             try {
                 T obj = classz.newInstance();
-                BeanUtils.populate(obj, dbObj.toMap());
+                FastBeanUtils.fastPopulate(obj, dbObj.toMap());
                 return obj;
             } catch (Exception e) {
                 throw new Error(e);
@@ -74,9 +75,9 @@ public class MongoDBDaoImpl implements BaseDao {
         return params;
     }
 
-    public List<?> find(Class<?> classz, QueryObject qo) {
+    @SuppressWarnings("unchecked")
+	public List<?> find(Class<?> classz, QueryObject qo) {
         List<Object> list = new ArrayList<Object>();
-
         DBObject params = analyzeQueryObject(qo);
         DBObject order = null;
         if (qo.getOrderBy() != null) {
@@ -89,7 +90,7 @@ public class MongoDBDaoImpl implements BaseDao {
 	            DBObject dbObj = cursor.next();
 	            try {
 	                Object obj = classz.newInstance();
-	                BeanUtils.populate(obj, dbObj.toMap());
+	                FastBeanUtils.fastPopulate(obj, dbObj.toMap());
 	                list.add(obj);
 	            } catch (Exception e) {
 	                throw new Error(e);

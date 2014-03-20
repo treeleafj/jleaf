@@ -2,7 +2,7 @@ package org.jleaf.web.action;
 
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.jleaf.utils.FastBeanUtils;
 import org.jleaf.web.action.analyze.AnalyzeResult;
 
 /**
@@ -33,7 +33,7 @@ public class HttpActionImpl implements HttpAction {
     public <T> T toObj(Class<T> classz) {
         try {
             Object obj = classz.newInstance();
-            BeanUtils.populate(obj, params);
+            FastBeanUtils.fastPopulate(obj, params);
             return (T) obj;
         } catch (Exception e) {
             throw new Error(e.getCause());

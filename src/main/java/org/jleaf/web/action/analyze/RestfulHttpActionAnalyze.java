@@ -1,5 +1,6 @@
 package org.jleaf.web.action.analyze;
 
+import java.security.acl.LastOwnerException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +37,10 @@ public class RestfulHttpActionAnalyze extends HttpActionAnalyze {
         // 先去掉开头的 '/'
         if (uri.charAt(0) == '/') {
             uri = uri.substring(1);
+        }
+        //如果uri的最后包含'/',且长度大于1
+        if(uri.endsWith("/") && uri.length() > 1){
+        	uri = uri.substring(0,uri.length() - 1);
         }
         //截取最后的.***后缀
         int dotIndex = uri.lastIndexOf(".");
