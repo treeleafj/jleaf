@@ -2,9 +2,9 @@ package org.jleaf.utils;
 
 import java.lang.reflect.Method;
 
+import org.demo.entity.User;
 import org.junit.Assert;
 import org.junit.Test;
-import org.shop.domain.User;
 
 public class BeanInfoUtilsTest {
 	

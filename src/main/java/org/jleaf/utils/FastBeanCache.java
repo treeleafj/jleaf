@@ -21,42 +21,48 @@ public class FastBeanCache {
 	public Map<String,PropertiesEntry> getPropertiesEntryMap(Class<?> classz) {
 		Map<String,PropertiesEntry> methods = this.cache.get(classz);
 		if(methods == null){
+			
 			synchronized (classz) {
 				
-				methods = new HashMap<String, PropertiesEntry>();
+				methods = this.cache.get(classz);
+				//保证线程同步性
+				if(methods == null){
 				
-				Method [] ms = classz.getMethods();
-				
-				for(Method m : ms){
-					if(BeanInfoUtils.isGet(m)){
-						
-						String name = BeanInfoUtils.getPropertiesNameByGet(m);
-						PropertiesEntry entry = methods.get(name);
-						
-						if(entry == null){
-							Class<?> type = BeanInfoUtils.getPropertiesTypeByGet(m);
-							entry = new PropertiesEntry(name,type);
+					methods = new HashMap<String, PropertiesEntry>();
+					
+					Method [] ms = classz.getMethods();
+					
+					for(Method m : ms){
+						if(BeanInfoUtils.isGet(m)){
+							
+							String name = BeanInfoUtils.getPropertiesNameByGet(m);
+							PropertiesEntry entry = methods.get(name);
+							
+							if(entry == null){
+								Class<?> type = BeanInfoUtils.getPropertiesTypeByGet(m);
+								entry = new PropertiesEntry(name,type);
+								entry.setGet(m);
+								methods.put(name, entry);
+							}
 							entry.setGet(m);
-							methods.put(name, entry);
-						}
-						entry.setGet(m);
-						
-					}else if(BeanInfoUtils.isSet(m)){
-						
-						String name = BeanInfoUtils.getPropertiesNameBySet(m);
-						PropertiesEntry entry = methods.get(name);
-						
-						if(entry == null){
-							Class<?> type = BeanInfoUtils.getPropertiesTypeBySet(m);
-							entry = new PropertiesEntry(name,type);
+							
+						}else if(BeanInfoUtils.isSet(m)){
+							
+							String name = BeanInfoUtils.getPropertiesNameBySet(m);
+							PropertiesEntry entry = methods.get(name);
+							
+							if(entry == null){
+								Class<?> type = BeanInfoUtils.getPropertiesTypeBySet(m);
+								entry = new PropertiesEntry(name,type);
+								entry.setSet(m);
+								methods.put(name, entry);
+							}
 							entry.setSet(m);
-							methods.put(name, entry);
 						}
-						entry.setSet(m);
 					}
+					
+					this.cache.put(classz, methods);
 				}
-				
-				this.cache.put(classz, methods);
 			}
 		}
 		return methods;

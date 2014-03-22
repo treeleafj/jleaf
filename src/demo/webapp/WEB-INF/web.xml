@@ -10,15 +10,6 @@
         <welcome-file>touch_index.jsp</welcome-file>
     </welcome-file-list>
     
-    <servlet>
-    	<servlet-name>TestServlet</servlet-name>
-    	<servlet-class>org.demo.TestServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-    	<servlet-name>TestServlet</servlet-name>
-    	<url-pattern>/TestServlet.gif</url-pattern>
-    </servlet-mapping>
-    
     <filter>
         <filter-name>jleaf</filter-name>
         <filter-class>org.jleaf.web.filter.MvcFilter</filter-class>
@@ -35,7 +26,7 @@
         <!-- 扫描的路径,可以设置多个,用逗号隔开 -->
         <init-param>
             <param-name>package</param-name>
-            <param-value>org.shop.*</param-value>
+            <param-value>org.demo.*</param-value>
             <!-- <param-value>org.demo.*,org.jleaf.db.jpa.interceptor.*</param-value> -->
         </init-param>
     </filter>

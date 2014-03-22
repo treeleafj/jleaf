@@ -64,5 +64,7 @@ public class FastBeanUtils extends BeanUtils{
 			}
 		}
 	}
+	
+//	public static Map<String,Object> fastDescribe()
 
 }
