@@ -4,7 +4,8 @@ jleaf
 极速,简单,解耦的MVC框架,集成MongoDB和JPA,支持restfull
 ---------------------------------
 ### 第一个例子:
-
+	
+```java
 	//定义Controller,访问地址为: user/index
 	@Control
 	public class UserController {
@@ -37,6 +38,7 @@ jleaf
 	    }
 	
 	}
+```
 	
 ### 注解:
 
