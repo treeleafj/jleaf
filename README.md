@@ -4,7 +4,8 @@ jleaf
 极速,简单,解耦的MVC框架,集成MongoDB和JPA,支持restfull
 ---------------------------------
 ### 第一个例子:
-
+	
+```java
 	//定义Controller,访问地址为: user/index
 	@Control
 	public class UserController {
@@ -37,9 +38,11 @@ jleaf
 	    }
 	
 	}
+```
 	
 ### 注解:
-
+	
+```java
 	@Control(value,method,isSingleton) //指定该普通java类为Controller,method访问方式,isSingleton是否单例
 	@Method(HttpMethod.POST) //指定该Controller下面的所有方法得post方式才能访问
 	@ClearInterceptor({BaseInitInterceptor.class})   //清除指定的全局Interceptor,如果不指定清除哪个,则默认是清除全部
@@ -72,6 +75,7 @@ jleaf
 	    }
 	
 	}
+```
 	
 ### Controller
 	
@@ -91,6 +95,7 @@ jleaf
 	
 ### 入参 HttpAction
     
+```java
 > HttpAction.getParams();//获得Http请求前端传递过来的参数
     
 > HttpAction.getSession();//获得session(对此map的操作会同步到对应的session中去)
@@ -98,7 +103,8 @@ jleaf
 > HttpAction.toObj(?);//方便将请求参数装为对象
 	 
 > HttpAction.getAnalyzeResult();//拿到Action的解析结果,可得到请求的uri以及HttpMethod和访问后缀
-
+```
+	
 > 举个使用访问后缀的实例:
 	
 > 在请求的地址上加上后缀 .json,让后台访问json数据, .xml则返回xml数据,其他则跳网页
@@ -107,6 +113,7 @@ jleaf
 	
 > 后台Java代码:
     
+```java
 	public Result data(HttpAction actionReq){
 		
 		Stri ng postfix = actionReq.getAnalyzeResult().getPostfix();
@@ -119,6 +126,7 @@ jleaf
 			return JspResult("index.jsp");
 		}
 	}
+```
 	
 > 对于Controller里方法的返回类型为Result接口类型:
 	    
@@ -149,6 +157,7 @@ jleaf
 	
 > 拦截器分为全局,类级别,方法级别三种,同时皆需实现Interceptor接口
 	
+```java
 	@GlobalInterceptor//标上该注解后,将被扫描到,同时作为全局拦截器,拦截所有的用户请求
     public class BaseInitInterceptor implements Interceptor {
 		//action执行前
@@ -183,21 +192,25 @@ jleaf
 			return new JspResult("/index.jsp");
 		}
 	}
+```
 	
 > 如果想不使用上一层的拦截器,可采用@ClearInterceptor,负责清空上一层次的Intercepter,比如:
 	
+```java
 	@Control
 	@ClearInterceptor
 	@Interceptors(ClassInterceptor.class)
 	public class UserController {
     
 	}
+```
 	
 > 但如果GlobalInterceptor的clear为NOTCLEAR的则不会清除
 	
 	
 ### Junit测试,无需依赖第三方jar包:
 	
+```java
 	//只需继承JleafJunit
 	public class UserControllerTest extends JleafJunit {
 	
@@ -224,12 +237,14 @@ jleaf
 	    }
 	
 	}
-
+```
+	
 ### 对restfull的支持
 > 在src目录下建立jleaf.properties,在里面添加:
 > jleaf.defaultActionAnalyzeClass=org.jleaf.web.action.analyze.RestfulHttpActionAnalyze
 > 这样就把解析用户请求的解析实现类改Restful方式的,然后在Controller中的方法命名:
 	
+```java
 	public UserController{
 		
 		//http://localhost/user	(get)
@@ -267,17 +282,20 @@ jleaf
 	        return new StringResult("=>delete");
 	    }
 	}
+```
 	
 ### 自动CRUD的实现
 > 参考demo里的MsgController实现
-
+	
+```java
 	//继承CrudController自动实现增删改查
 	@Control
 	public class MsgController extends CrudController<Msg, MsgServiceImpl, MsgQuery> {
 	
 	}
-	
 	//如果是restfull方式的,则可以将CrudController换为RestfullCrudController
+	
+```
 	
 ## 数据源的切换(JPA和MongoDB):
 > 一样在jleaf.properties里加上:
